@@ -1,0 +1,54 @@
+﻿using KLab.Application.Core.Abstractions.Data;
+using KLab.Application.Core.Abstractions.Emails;
+using KLab.Application.Core.Abstractions.Messaging;
+using KLab.Domain.Core.Constants.Emails;
+using KLab.Domain.Core.Errors;
+using KLab.Domain.Core.Primitives;
+using KLab.Domain.Core.Primitives.ResultModel;
+
+namespace KLab.Application.Authentication.Commands.SignIn
+{
+	public class SignInCommandHandler : ICommandHandler<SignInCommand, Result<object>>
+	{
+		private readonly IIdentityService _identityService;
+		private readonly IEmailService _emailService;
+
+		public SignInCommandHandler(IIdentityService identityService, IEmailService emailService)
+		{
+			_identityService = identityService;
+			_emailService = emailService;
+		}
+
+		public async Task<Result<object>> Handle(SignInCommand request, CancellationToken cancellationToken)
+		{
+			var foundResult = await _identityService.FindUserAsync(request.Email!, FindType.Email);
+
+			if (foundResult.isFailure)
+			{
+				return Result.Failure(foundResult.Error);
+			}
+
+			var user = foundResult.Value;
+
+			var emailVerified = await _identityService.IsEmailVerifiedAsync(user);
+
+			if (emailVerified.isFailure)
+			{
+				return Result.Failure(emailVerified.Error);
+			}
+
+			var authenticationCode = await _identityService.GenerateAuthenticationTokenAsync(user);
+
+			await _emailService.SendEmailAsync(
+				email: user.Email!,
+				subject: EmailSubject.Authentication,
+				body: EmailBody.Authentication(user.UserName!, authenticationCode));
+
+			return Result.Success(new
+			{
+				user.Email,
+				Message = $"The authentication code has been sent to your email address: {user.Email}."
+			});
+		}
+	}
+}
