@@ -16,8 +16,6 @@ namespace KLab.Infrastructure.Core.Services.Email
 
         public async Task SendEmailAsync(string email, string subject, string body)
         {
-            await _smtp.ConfigureSmtp();
-
 			var message = ConfigureEmailMessage(_smtp.SenderEmail!, email, subject, body);
 
             using (var client = new SmtpClient())

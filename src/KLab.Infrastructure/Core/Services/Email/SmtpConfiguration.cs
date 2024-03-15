@@ -1,27 +1,20 @@
-﻿using KLab.Infrastructure.Core.Abstractions;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace KLab.Infrastructure.Core.Services.Email
 {
     public class SmtpConfiguration
     {
-        private readonly ISecretManager _secretManager;
+        public string? MailServer { get; init; }
+        public string? SenderEmail { get; init; }
+        public string? Password { get; init; }
+        public int MailPort { get; init; }
 
-        public string? MailServer { get; private set; }
-        public string? SenderEmail { get; private set; }
-        public string? Password { get; private set; }
-        public int MailPort { get; private set; }
-
-        public SmtpConfiguration(ISecretManager secretManager)
+        public SmtpConfiguration(IConfiguration configuration)
         {
-            _secretManager = secretManager;
+			MailServer = configuration["EmailSettings:MailServer"];
+			SenderEmail = configuration["EmailSettings:SenderEmail"];
+			Password = configuration["EmailSettings:Password"];
+			MailPort = int.Parse(configuration["EmailSettings:MailPort"]!);
 		}
-
-        public async Task ConfigureSmtp()
-        {
-            MailServer = await _secretManager.GetSecretAsync(nameof(MailServer));
-            SenderEmail = await _secretManager.GetSecretAsync(nameof(SenderEmail));
-            Password = await _secretManager.GetSecretAsync(nameof(Password));
-            MailPort = int.Parse(await _secretManager.GetSecretAsync(nameof(MailPort)));
-        }
     }
 }
