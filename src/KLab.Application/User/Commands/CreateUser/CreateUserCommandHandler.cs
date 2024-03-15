@@ -7,7 +7,7 @@ using KLab.Domain.Entities;
 
 namespace KLab.Application.User.Commands.CreateUser
 {
-	public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Result<object>>
+	public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Result>
 	{
 		private readonly IIdentityService _identityService;
 		private readonly IEmailService _emailService;
@@ -18,7 +18,7 @@ namespace KLab.Application.User.Commands.CreateUser
 			_emailService = emailService;
 		}
 
-		public async Task<Result<object>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+		public async Task<Result> Handle(CreateUserCommand request, CancellationToken cancellationToken)
 		{
 			var uniqueResult = await _identityService.IsEmailUniqueAsync(request.Email);
 
@@ -47,11 +47,7 @@ namespace KLab.Application.User.Commands.CreateUser
 				subject: EmailSubject.Verification,
 				body: EmailBody.Verification(user.UserName, verificationCode));
 
-			return Result.Success(new
-			{
-				user.Email,
-				Message = $"The verification code for completing the registration process has been sent to your email address: {user.Email}."
-			});
+			return Result.Success();
 		}
 	}
 }

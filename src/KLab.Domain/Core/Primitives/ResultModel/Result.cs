@@ -28,11 +28,11 @@ namespace KLab.Domain.Core.Primitives.ResultModel
 
 		public static Result Success() => new(true, Error.None, default!);
 
-        public static Result<TValue> Success<TValue>(TValue value) => new Result<TValue>(value, true, Error.None, default!);
+        public static Result<TValue> Success<TValue>(TValue value) => new Result<TValue>(value, true, Error.None, Enumerable.Empty<Error>());
 
         public static Result Failure(Error error) => new(false, error, new Collection<Error>());
 
-        public static Result<TValue> Failure<TValue>(Error error) => new Result<TValue>(default!, false, error, default!);
+        public static Result<TValue> Failure<TValue>(Error error) => new Result<TValue>(default!, false, error, Enumerable.Empty<Error>());
 
 		public static Result Failure(IEnumerable<Error> errors) => new(false, Error.None, errors);
 

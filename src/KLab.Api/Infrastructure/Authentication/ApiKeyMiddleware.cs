@@ -1,17 +1,16 @@
 ﻿using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives.ErrorModel;
-using KLab.Infrastructure.Core.Abstractions;
 using System.Net;
 
 namespace KLab.Api.Infrastructure.Authentication
 {
 	public class ApiKeyMiddleware : IMiddleware
 	{
-		private readonly ISecretManager _secretManager;
+		private readonly IConfiguration _configuration;
 
-        public ApiKeyMiddleware(ISecretManager secretManager)
+        public ApiKeyMiddleware(IConfiguration configuration)
         {
-			_secretManager = secretManager;
+			_configuration = configuration;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -23,7 +22,7 @@ namespace KLab.Api.Infrastructure.Authentication
 				return;
 			}
 
-			var apiKey = await _secretManager.GetSecretAsync(ApiKeyConstants.Section);
+			var apiKey = _configuration[ApiKeyConstants.Section];
 
 			if (string.IsNullOrWhiteSpace(apiKey))
 			{

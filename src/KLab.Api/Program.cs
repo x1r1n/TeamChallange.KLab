@@ -6,8 +6,6 @@ using Microsoft.OpenApi.Models;
 using KLab.Api.Infrastructure.Handlers;
 using KLab.Api.Infrastructure.Authentication;
 using KLab.Api.Infrastructure.Configurations;
-using KLab.Infrastructure.Core.Abstractions;
-using KLab.Api.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +15,9 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddTransient<ApiKeyMiddleware>();
 
-builder.Services.AddSingleton<ISecretManager, SecretManager>();
-
 builder.Services
 	.AddApplication()
-	.AddInfrastructure(new SecretManager(builder.Configuration));
+	.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 
