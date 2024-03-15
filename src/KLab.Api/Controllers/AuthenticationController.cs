@@ -5,13 +5,14 @@ using KLab.Application.Authentication.Commands.ConfirmEmail;
 using KLab.Application.Authentication.Commands.SignIn;
 using KLab.Application.User.Commands.CreateUser;
 using KLab.Contracts.Authentication;
+using KLab.Domain.Core.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KLab.Api.Controllers
 {
-	[AllowAnonymous]
+    [AllowAnonymous]
 	public class AuthenticationController : ApiController
 	{
 		public AuthenticationController(IMediator mediator) 
@@ -31,7 +32,7 @@ namespace KLab.Api.Controllers
 				return BadRequest(result.Error);
 			}
 
-			return Ok(result.Value);
+			return Ok(DomainResponses.Email.VerificationCodeSent);
 		}
 
 		[HttpPost(ApiRoutes.Authentication.SignIn)]
@@ -46,7 +47,7 @@ namespace KLab.Api.Controllers
 				return BadRequest(result.Error);
 			}
 
-			return Ok(result.Value);
+			return Ok(DomainResponses.Email.AuthenticationCodeSent);
 		}
 
 		[HttpPost(ApiRoutes.Authentication.VerifyEmail)]
