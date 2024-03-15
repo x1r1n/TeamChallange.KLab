@@ -3,7 +3,7 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.Authentication.Commands.SignIn
 {
-	public class SignInCommand : ICommand<Result<object>>
+	public class SignInCommand : ICommand<Result>
 	{
 		public string? Email { get; init; }
 

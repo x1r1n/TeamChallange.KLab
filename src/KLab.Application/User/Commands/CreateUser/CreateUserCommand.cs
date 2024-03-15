@@ -5,7 +5,7 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.User.Commands.CreateUser
 {
-	public class CreateUserCommand : ICommand<Result<object>>
+	public class CreateUserCommand : ICommand<Result>
 	{
 		public string UserName { get; init; }
 		public string Email { get; init; }

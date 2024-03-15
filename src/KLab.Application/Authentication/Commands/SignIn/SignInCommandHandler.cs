@@ -2,13 +2,12 @@
 using KLab.Application.Core.Abstractions.Emails;
 using KLab.Application.Core.Abstractions.Messaging;
 using KLab.Domain.Core.Constants.Emails;
-using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives;
 using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.Authentication.Commands.SignIn
 {
-	public class SignInCommandHandler : ICommandHandler<SignInCommand, Result<object>>
+	public class SignInCommandHandler : ICommandHandler<SignInCommand, Result>
 	{
 		private readonly IIdentityService _identityService;
 		private readonly IEmailService _emailService;
@@ -19,7 +18,7 @@ namespace KLab.Application.Authentication.Commands.SignIn
 			_emailService = emailService;
 		}
 
-		public async Task<Result<object>> Handle(SignInCommand request, CancellationToken cancellationToken)
+		public async Task<Result> Handle(SignInCommand request, CancellationToken cancellationToken)
 		{
 			var foundResult = await _identityService.FindUserAsync(request.Email!, FindType.Email);
 
@@ -44,11 +43,7 @@ namespace KLab.Application.Authentication.Commands.SignIn
 				subject: EmailSubject.Authentication,
 				body: EmailBody.Authentication(user.UserName!, authenticationCode));
 
-			return Result.Success(new
-			{
-				user.Email,
-				Message = $"The authentication code has been sent to your email address: {user.Email}."
-			});
+			return Result.Success();
 		}
 	}
 }
