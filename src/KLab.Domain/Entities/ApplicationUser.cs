@@ -6,7 +6,8 @@ namespace KLab.Domain.Entities
 	{
 		private readonly DateTimeOffset? _createdAt;
 
-		public string? FullName { get; set; }
+		public string? Nickname { get; set; }
+		public string? Description { get; set; }
 		public string? AvatarUrl { get; set; }
 		public DateTimeOffset? CreatedAt => _createdAt;
 		public List<ChatUsers>? Chats { get; set; }
