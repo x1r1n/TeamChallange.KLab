@@ -5,5 +5,5 @@ namespace KLab.Application.Authentication.Commands.SignOut
 {
 	public class SignOutCommand : ICommand<Result>
 	{
-    }
+	}
 }

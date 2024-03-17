@@ -8,12 +8,12 @@ namespace KLab.Application.Authentication.Commands.SignOut
 	{
 		private readonly IIdentityService _identityService;
 
-        public SignOutCommandHandler(IIdentityService identityService)
-        {
-            _identityService = identityService;
-        }
+		public SignOutCommandHandler(IIdentityService identityService)
+		{
+			_identityService = identityService;
+		}
 
-        public async Task<Result> Handle(SignOutCommand request, CancellationToken cancellationToken)
+		public async Task<Result> Handle(SignOutCommand request, CancellationToken cancellationToken)
 		{
 			var result = await _identityService.SignOutAsync();
 

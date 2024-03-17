@@ -9,11 +9,11 @@ namespace KLab.Application.User.Commands.UpdateUser
 		public string? Nickname { get; init; }
 		public string? Description { get; init; }
 
-        public UpdateUserCommand(string id, string nickname, string description)
-        {
+		public UpdateUserCommand(string id, string nickname, string description)
+		{
 			Id = id;
-            Nickname = nickname;
+			Nickname = nickname;
 			Description = description;
-        }
-    }
+		}
+	}
 }

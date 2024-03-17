@@ -7,12 +7,12 @@
 		public string? Nickname { get; init; }
 		public string? Email { get; init; }
 
-        public GetUserQueryResponse(string id, string username, string nickname, string email)
-        {
-            Id = id;
+		public GetUserQueryResponse(string id, string username, string nickname, string email)
+		{
+			Id = id;
 			Username = username;
 			Nickname = nickname;
 			Email = email;
-        }
-    }
+		}
+	}
 }

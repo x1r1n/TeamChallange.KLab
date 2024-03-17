@@ -8,12 +8,12 @@ namespace KLab.Api.Infrastructure.Authentication
 	{
 		private readonly IConfiguration _configuration;
 
-        public ApiKeyMiddleware(IConfiguration configuration)
-        {
+		public ApiKeyMiddleware(IConfiguration configuration)
+		{
 			_configuration = configuration;
-        }
+		}
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+		public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 		{
 			if (!context.Request.Headers.TryGetValue(ApiKeyConstants.Header, out var extractedApiKey))
 			{

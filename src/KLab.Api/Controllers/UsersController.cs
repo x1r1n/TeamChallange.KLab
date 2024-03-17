@@ -7,16 +7,15 @@ using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives.ErrorModel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace KLab.Api.Controllers
 {
 	public class UsersController : ApiController
 	{
-        public UsersController(IMediator sender)
-            : base(sender) 
-        { 
-        }
+		public UsersController(IMediator sender)
+			: base(sender)
+		{
+		}
 
 		[HttpGet(ApiRoutes.Users.Me)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
@@ -42,30 +41,30 @@ namespace KLab.Api.Controllers
 		}
 
 		[HttpPatch(ApiRoutes.Users.Update)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
 		public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
-        {
+		{
 			if (request is null)
-            {
-                return BadRequest(Error.Failure(
-                    "RequestIsRequired",
-                    "The request is required."));
-            }
+			{
+				return BadRequest(Error.Failure(
+					"RequestIsRequired",
+					"The request is required."));
+			}
 
-            var result = await _mediator.Send(new UpdateUserCommand(
-                id, 
-                request.Nickname!, 
-                request.Description!));
+			var result = await _mediator.Send(new UpdateUserCommand(
+				id,
+				request.Nickname!,
+				request.Description!));
+			
+			if (result.isFailure)
+			{
+				return HandleBadRequest(result.Errors);
+			}
 
-            if (result.isFailure)
-            {
-                return HandleBadRequest(result.Errors);
-            }
-
-            return Ok();
-        }
+			return Ok();
+		}
 	}
 }

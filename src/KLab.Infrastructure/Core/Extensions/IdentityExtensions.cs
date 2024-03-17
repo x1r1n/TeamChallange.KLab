@@ -1,7 +1,4 @@
-﻿using KLab.Application.User.Commands.UpdateUser;
-using KLab.Domain.Core.Errors;
-using KLab.Domain.Core.Primitives.ErrorModel;
-using KLab.Domain.Entities;
+﻿using KLab.Domain.Core.Primitives.ErrorModel;
 using Microsoft.AspNetCore.Identity;
 
 namespace KLab.Infrastructure.Core.Extensions

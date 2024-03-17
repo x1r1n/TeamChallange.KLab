@@ -2,7 +2,7 @@
 
 namespace KLab.Application.Core.Errors
 {
-    internal class ValidationErrors
+	internal class ValidationErrors
 	{
 		internal static class User
 		{

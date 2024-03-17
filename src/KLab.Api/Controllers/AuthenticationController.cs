@@ -14,10 +14,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KLab.Api.Controllers
 {
-    [AllowAnonymous]
+	[AllowAnonymous]
 	public class AuthenticationController : ApiController
 	{
-		public AuthenticationController(IMediator mediator) 
+		public AuthenticationController(IMediator mediator)
 			: base(mediator)
 		{
 		}

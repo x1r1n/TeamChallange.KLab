@@ -1,11 +1,11 @@
-using Serilog;
-using KLab.Application;
-using KLab.Infrastructure;
 using FluentValidation.AspNetCore;
-using Microsoft.OpenApi.Models;
-using KLab.Api.Infrastructure.Handlers;
 using KLab.Api.Infrastructure.Authentication;
 using KLab.Api.Infrastructure.Configurations;
+using KLab.Api.Infrastructure.Handlers;
+using KLab.Application;
+using KLab.Infrastructure;
+using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 

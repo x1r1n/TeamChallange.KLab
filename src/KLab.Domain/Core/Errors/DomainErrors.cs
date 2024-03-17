@@ -2,7 +2,7 @@
 
 namespace KLab.Domain.Core.Errors
 {
-    public static class DomainErrors
+	public static class DomainErrors
 	{
 		public static class Server
 		{

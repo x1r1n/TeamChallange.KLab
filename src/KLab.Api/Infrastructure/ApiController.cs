@@ -1,5 +1,4 @@
 ﻿using KLab.Domain.Core.Primitives.ErrorModel;
-using KLab.Domain.Core.Primitives.ResultModel;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +23,6 @@ namespace KLab.Api.Infrastructure
 				ErrorType.Conflict => Conflict(errors),
 				_ => BadRequest(errors)
 			};
-			
+
 	}
 }

@@ -7,38 +7,38 @@ using System.Reflection;
 
 namespace KLab.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
-    {
-        public DbSet<Messages> Messages { get; set; }
-        public DbSet<Chats> Chats { get; set; }
-        public DbSet<ChatUsers> ChatUsers { get; set; }
+	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
+	{
+		public DbSet<Messages> Messages { get; set; }
+		public DbSet<Chats> Chats { get; set; }
+		public DbSet<ChatUsers> ChatUsers { get; set; }
 
-        public ApplicationDbContext() { }
+		public ApplicationDbContext() { }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
-            : base(options) 
-        { 
-        }
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+			: base(options)
+		{
+		}
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
 			base.OnModelCreating(modelBuilder);
 
 			modelBuilder.Entity<ApplicationUser>().ToTable("Users");
 
-            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
+			modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
 
-            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
+			modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
 
-            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
+			modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
 
-            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+			modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
 
-            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+			modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
-            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
+			modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
 
 		}
 	}

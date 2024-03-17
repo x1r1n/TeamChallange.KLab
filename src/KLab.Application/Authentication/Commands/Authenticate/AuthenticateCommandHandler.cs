@@ -19,10 +19,10 @@ namespace KLab.Application.Authentication.Commands.Authenticate
 		{
 			var foundResult = await _identityService.FindUserAsync(request.Email!, FindType.Email);
 
-            if (foundResult.isFailure)
-            {
+			if (foundResult.isFailure)
+			{
 				return Result.Failure(foundResult.Errors);
-            }
+			}
 
 			var user = foundResult.Value;
 
@@ -39,6 +39,6 @@ namespace KLab.Application.Authentication.Commands.Authenticate
 			}
 
 			return Result.Success();
-        }
+		}
 	}
 }
