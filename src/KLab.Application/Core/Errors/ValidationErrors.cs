@@ -18,6 +18,9 @@ namespace KLab.Application.Core.Errors
 			internal static Error EmailIsNotValid => Error.Validition(
 				"User.EmailIsNotValid",
 				"The email is not valid.");
+			internal static Error UserIdIsRequired => Error.Validition(
+				"User.UserIdIsRequired",
+				"THe user id is required.");
 		}
 
 		internal static class Authentication
@@ -36,11 +39,7 @@ namespace KLab.Application.Core.Errors
 
 			internal static Error AuthenticationCodeIsRequired => Error.Validition(
 				"Authentication.AuthenticationCodeIsRequired",
-				"The Authentication code is required.");
-		}
-
-		internal static class Profile
-		{
+				"The authentication code is required.");
 		}
 	}
 }

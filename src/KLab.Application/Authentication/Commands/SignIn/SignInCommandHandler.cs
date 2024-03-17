@@ -2,6 +2,7 @@
 using KLab.Application.Core.Abstractions.Emails;
 using KLab.Application.Core.Abstractions.Messaging;
 using KLab.Domain.Core.Constants.Emails;
+using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives;
 using KLab.Domain.Core.Primitives.ResultModel;
 
@@ -24,16 +25,14 @@ namespace KLab.Application.Authentication.Commands.SignIn
 
 			if (foundResult.isFailure)
 			{
-				return Result.Failure(foundResult.Error);
+				return Result.Failure(foundResult.Errors);
 			}
 
 			var user = foundResult.Value;
 
-			var emailVerified = await _identityService.IsEmailVerifiedAsync(user);
-
-			if (emailVerified.isFailure)
+			if (!user.EmailConfirmed)
 			{
-				return Result.Failure(emailVerified.Error);
+				return Result.Failure(DomainErrors.Authentication.UnverifiedEmail);
 			}
 
 			var authenticationCode = await _identityService.GenerateAuthenticationTokenAsync(user);

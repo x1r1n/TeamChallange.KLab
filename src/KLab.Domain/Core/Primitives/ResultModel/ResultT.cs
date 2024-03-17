@@ -6,8 +6,8 @@ namespace KLab.Domain.Core.Primitives.ResultModel
     {
         private readonly TValue _value;
 
-        protected internal Result(TValue value, bool isSuccess, Error error, IEnumerable<Error> errors)
-            : base(isSuccess, error, errors)
+        protected internal Result(TValue value, bool isSuccess, IEnumerable<Error> errors)
+            : base(isSuccess, errors)
         {
             _value = value;
         }

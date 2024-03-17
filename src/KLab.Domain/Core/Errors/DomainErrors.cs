@@ -43,6 +43,10 @@ namespace KLab.Domain.Core.Errors
 			public static Error IncorrectAuthenticationCode => Error.Failure(
 				"Authentication.IncorrectAuthenticationCode",
 				"The authentication code is incorrect.");
+
+			public static Error Unauthorized => Error.Failure(
+				"Authentication.Unauthorized",
+				"The user is unauthorized");
 		}
 
 		public static class ClientAuthentication

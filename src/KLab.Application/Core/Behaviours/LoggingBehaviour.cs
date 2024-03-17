@@ -31,7 +31,7 @@ namespace KLab.Application.Core.Behaviours
 				_logger.LogError(
 					"Request failure {@RequestName}, {@Error}, {@DateTimeOffsetUtc}",
 					typeof(TRequest).Name,
-					result.Error,
+					result.Errors,
 					DateTimeOffset.UtcNow);
 			}
 
