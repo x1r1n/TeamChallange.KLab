@@ -2,7 +2,7 @@
 
 namespace KLab.Application.Core.Errors
 {
-    internal class ValidationErrors
+	internal class ValidationErrors
 	{
 		internal static class User
 		{
@@ -18,6 +18,18 @@ namespace KLab.Application.Core.Errors
 			internal static Error EmailIsNotValid => Error.Validition(
 				"User.EmailIsNotValid",
 				"The email is not valid.");
+			internal static Error IdIsRequired => Error.Validition(
+				"User.IdIsRequired",
+				"The user id is required.");
+			internal static Error ImageIsRequired => Error.Validition(
+				"User.ImageIsRequired",
+				"The image is required.");
+			internal static Error ImageContentTypeIsRequired => Error.Validition(
+				"User.ImageContentTypeIsRequired",
+				"The image content type is required.");
+			internal static Error FileMustBeImage => Error.Validition(
+				"User.FileMustBeImage",
+				"The file must be an image.");
 		}
 
 		internal static class Authentication
@@ -36,11 +48,7 @@ namespace KLab.Application.Core.Errors
 
 			internal static Error AuthenticationCodeIsRequired => Error.Validition(
 				"Authentication.AuthenticationCodeIsRequired",
-				"The Authentication code is required.");
-		}
-
-		internal static class Profile
-		{
+				"The authentication code is required.");
 		}
 	}
 }

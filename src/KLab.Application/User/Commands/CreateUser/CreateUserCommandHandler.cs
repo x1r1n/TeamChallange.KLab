@@ -24,7 +24,7 @@ namespace KLab.Application.User.Commands.CreateUser
 
 			if (uniqueResult.isFailure)
 			{
-				return Result.Failure(uniqueResult.Error);
+				return Result.Failure(uniqueResult.Errors);
 			}
 
 			var user = new ApplicationUser
@@ -37,7 +37,7 @@ namespace KLab.Application.User.Commands.CreateUser
 
 			if (creationResult.isFailure)
 			{
-				return Result.Failure(creationResult.Error);
+				return Result.Failure(creationResult.Errors);
 			}
 
 			var verificationCode = await _identityService.GenerateEmailVerificationTokenAsync(user);

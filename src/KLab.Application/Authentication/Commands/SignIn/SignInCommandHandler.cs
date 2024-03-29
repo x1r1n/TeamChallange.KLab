@@ -24,16 +24,14 @@ namespace KLab.Application.Authentication.Commands.SignIn
 
 			if (foundResult.isFailure)
 			{
-				return Result.Failure(foundResult.Error);
+				return Result.Failure(foundResult.Errors);
 			}
 
 			var user = foundResult.Value;
 
-			var emailVerified = await _identityService.IsEmailVerifiedAsync(user);
-
-			if (emailVerified.isFailure)
+			if (!user.EmailConfirmed)
 			{
-				return Result.Failure(emailVerified.Error);
+				return Result.Failure(DomainErrors.Authentication.UnverifiedEmail);
 			}
 
 			var authenticationCode = await _identityService.GenerateAuthenticationTokenAsync(user);

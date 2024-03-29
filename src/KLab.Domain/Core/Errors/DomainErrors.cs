@@ -2,7 +2,7 @@
 
 namespace KLab.Domain.Core.Errors
 {
-    public static class DomainErrors
+	public static class DomainErrors
 	{
 		public static class Server
 		{
@@ -20,6 +20,10 @@ namespace KLab.Domain.Core.Errors
 			public static Error AlreadyRegistered => Error.Conflict(
 				"User.AlreadyRegistered",
 				"The user with this email has already been registered.");
+
+			public static Error ImageNotFound => Error.Conflict(
+				"User.ImageNotFound",
+				"The user image is not found.");
 		}
 
 		public static class Authentication
@@ -43,6 +47,10 @@ namespace KLab.Domain.Core.Errors
 			public static Error IncorrectAuthenticationCode => Error.Failure(
 				"Authentication.IncorrectAuthenticationCode",
 				"The authentication code is incorrect.");
+
+			public static Error Unauthorized => Error.Failure(
+				"Authentication.Unauthorized",
+				"The user is unauthorized");
 		}
 
 		public static class ClientAuthentication

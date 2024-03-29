@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using KLab.Application.Core.Errors;
 using KLab.Application.Core.Extensions;
-using KLab.Domain.Core.Constants.Regex;
+using KLab.Domain.Core.Constants;
 
 namespace KLab.Application.User.Commands.CreateUser
 {
-	public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+    public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 	{
 		public CreateUserCommandValidator()
 		{

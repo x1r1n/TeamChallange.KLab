@@ -3,7 +3,7 @@ using KLab.Domain.Core.Primitives.ErrorModel;
 
 namespace KLab.Application.Core.Extensions
 {
-    public static class FluentValidationExtensions
+	public static class FluentValidationExtensions
 	{
 		public static IRuleBuilderOptions<T, TProperty> WithError<T, TProperty>(
 			this IRuleBuilderOptions<T, TProperty> rule, Error error)
@@ -16,6 +16,6 @@ namespace KLab.Application.Core.Extensions
 			return rule
 				.WithErrorCode(error.Code)
 				.WithMessage(error.Description);
-		}	
+		}
 	}
 }

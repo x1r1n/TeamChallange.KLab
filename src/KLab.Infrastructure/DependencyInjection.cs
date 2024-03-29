@@ -1,6 +1,7 @@
 ﻿using KLab.Application.Core.Abstractions.Data;
 using KLab.Application.Core.Abstractions.Emails;
 using KLab.Domain.Entities;
+using KLab.Infrastructure.Core.Configurations;
 using KLab.Infrastructure.Core.Provider;
 using KLab.Infrastructure.Core.Services;
 using KLab.Infrastructure.Core.Services.Email;
@@ -13,9 +14,9 @@ using System.Reflection;
 
 namespace KLab.Infrastructure
 {
-    public static class DependencyInjection
+	public static class DependencyInjection
 	{
-        public static IServiceCollection AddInfrastructure(
+		public static IServiceCollection AddInfrastructure(
 			this IServiceCollection services,
 			IConfiguration configuration)
 		{
@@ -33,9 +34,7 @@ namespace KLab.Infrastructure
 				options =>
 				{
 					options.Tokens.EmailConfirmationTokenProvider = nameof(CustomEmailTokenProvider);
-
 					options.User.RequireUniqueEmail = true;
-
 					options.SignIn.RequireConfirmedEmail = true;
 				});
 
@@ -51,6 +50,11 @@ namespace KLab.Infrastructure
 			services.AddScoped<IEmailService, EmailService>();
 
 			services.AddScoped<SmtpConfiguration>();
+
+			services.AddTransient<BlobClientFactory>();
+
+			services.AddScoped<IFileService, FileService>(provider 
+				=> new FileService(provider.GetService<BlobClientFactory>()!.BlobContainerClient));
 
 			return services;
 		}

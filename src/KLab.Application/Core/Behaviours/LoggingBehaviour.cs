@@ -15,8 +15,8 @@ namespace KLab.Application.Core.Behaviours
 		}
 
 		public async Task<TResponse> Handle(
-			TRequest request, 
-			RequestHandlerDelegate<TResponse> next, 
+			TRequest request,
+			RequestHandlerDelegate<TResponse> next,
 			CancellationToken cancellationToken)
 		{
 			_logger.LogInformation(
@@ -31,7 +31,7 @@ namespace KLab.Application.Core.Behaviours
 				_logger.LogError(
 					"Request failure {@RequestName}, {@Error}, {@DateTimeOffsetUtc}",
 					typeof(TRequest).Name,
-					result.Error,
+					result.Errors,
 					DateTimeOffset.UtcNow);
 			}
 
