@@ -16,7 +16,7 @@ namespace KLab.Application.User.Commands.UpdateUser
 
 		public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 		{
-			var isUserExists = await _identityService.IsUserExists(request.Id!);
+			var isUserExists = await _identityService.IsUserExistsAsync(request.Id!);
 
 			if (!isUserExists)
 			{
@@ -25,12 +25,9 @@ namespace KLab.Application.User.Commands.UpdateUser
 
 			var updateResult = await _identityService.UpdateUserAsync(request, cancellationToken);
 
-			if (updateResult.isFailure)
-			{
-				return updateResult;
-			}
-
-			return Result.Success();
+			return updateResult.IsSuccess 
+				? Result.Success()
+				: Result.Failure(updateResult.Errors);
 		}
 	}
 }

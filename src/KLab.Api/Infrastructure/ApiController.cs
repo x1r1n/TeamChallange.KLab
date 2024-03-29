@@ -14,7 +14,7 @@ namespace KLab.Api.Infrastructure
 
 		protected ApiController(IMediator mediator) => _mediator = mediator;
 
-		protected IActionResult HandleBadRequest(IEnumerable<Error> errors) =>
+		protected IActionResult HandleFailure(IEnumerable<Error> errors) =>
 			errors.FirstOrDefault()!.Type switch
 			{
 				ErrorType.Failure => BadRequest(errors),

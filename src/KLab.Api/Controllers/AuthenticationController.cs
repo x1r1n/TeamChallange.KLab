@@ -32,12 +32,9 @@ namespace KLab.Api.Controllers
 		{
 			var result = await _mediator.Send(new CreateUserCommand(request.Username, request.Email));
 
-			if (result.isFailure)
-			{
-				return HandleBadRequest(result.Errors);
-			}
-
-			return Ok(DomainResponses.Email.VerificationCodeSent);
+			return result.IsSuccess
+				? Ok(DomainResponses.Email.VerificationCodeSent)
+				: HandleFailure(result.Errors);
 		}
 
 		[HttpPost(ApiRoutes.Authentication.SignIn)]
@@ -49,32 +46,26 @@ namespace KLab.Api.Controllers
 		{
 			var result = await _mediator.Send(new SignInCommand(request.Email));
 
-			if (result.isFailure)
-			{
-				return HandleBadRequest(result.Errors);
-			}
-
-			return Ok(DomainResponses.Email.AuthenticationCodeSent);
+			return result.IsSuccess
+				? Ok(DomainResponses.Email.AuthenticationCodeSent)
+				: HandleFailure(result.Errors);
 		}
 
 		[HttpPost(ApiRoutes.Authentication.SignOut)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status401Unauthorized)]
 		public async Task<IActionResult> UserSignOut()
 		{
 			var result = await _mediator.Send(new SignOutCommand());
 
-			if (result.isFailure)
-			{
-				return BadRequest(result.Errors);
-			}
-
-			return Ok();
+			return result.IsSuccess
+				? NoContent()
+				: HandleFailure(result.Errors);
 		}
 
 		[HttpPost(ApiRoutes.Authentication.VerifyEmail)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
@@ -82,16 +73,13 @@ namespace KLab.Api.Controllers
 		{
 			var result = await _mediator.Send(new VerifyEmailCommand(request.Email, request.VerificationCode));
 
-			if (result.isFailure)
-			{
-				return HandleBadRequest(result.Errors);
-			}
-
-			return Ok();
+			return result.IsSuccess
+				? NoContent()
+				: HandleFailure(result.Errors);
 		}
 
 		[HttpPost(ApiRoutes.Authentication.Authenticate)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
@@ -99,12 +87,9 @@ namespace KLab.Api.Controllers
 		{
 			var result = await _mediator.Send(new AuthenticateCommand(request.Email, request.AuthenticationCode));
 
-			if (result.isFailure)
-			{
-				return HandleBadRequest(result.Errors);
-			}
-
-			return Ok();
+			return result.IsSuccess
+				? NoContent()
+				: HandleFailure(result.Errors);
 		}
 	}
 }

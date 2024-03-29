@@ -15,6 +15,10 @@
 		{
 			public const string Me = "users/me";
 			public const string Update = "users/{id}";
+			public const string GetImage = "users/{id}/image";
+			public const string UploadImage = "users/{id}/image";
+			public const string UpdateImage = "users/{id}/image";
+			public const string DeleteImage = "users/{id}/image";
 		}
 	}
 }

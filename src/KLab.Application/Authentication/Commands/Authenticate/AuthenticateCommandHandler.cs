@@ -33,12 +33,9 @@ namespace KLab.Application.Authentication.Commands.Authenticate
 
 			var authenticateResult = await _identityService.AuthenticateUserAsync(user, request.AuthenticationCode!);
 
-			if (authenticateResult.isFailure)
-			{
-				return Result.Failure(authenticateResult.Errors);
-			}
-
-			return Result.Success();
+			return authenticateResult.IsSuccess 
+				? Result.Success()
+				: Result.Failure(authenticateResult.Errors);
 		}
 	}
 }

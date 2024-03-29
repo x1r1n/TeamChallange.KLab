@@ -17,12 +17,9 @@ namespace KLab.Application.Authentication.Commands.SignOut
 		{
 			var result = await _identityService.SignOutAsync();
 
-			if (result.isFailure)
-			{
-				return Result.Failure(result.Errors);
-			}
-
-			return Result.Success();
+			return result.IsSuccess
+				? Result.Success()
+				: Result.Failure(result.Errors);
 		}
 	}
 }

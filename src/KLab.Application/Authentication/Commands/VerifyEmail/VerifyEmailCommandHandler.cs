@@ -25,14 +25,11 @@ namespace KLab.Application.Authentication.Commands.ConfirmEmail
 
 			var user = foundResult.Value;
 
-			var confirmedResult = await _identityService.VerifyEmailAsync(user, request.VerificationCode!);
+			var verifiedResult = await _identityService.VerifyEmailAsync(user, request.VerificationCode!);
 
-			if (confirmedResult.isFailure)
-			{
-				return Result.Failure(confirmedResult.Errors);
-			}
-
-			return Result.Success();
+			return verifiedResult.IsSuccess 
+				? Result.Success() 
+				: Result.Failure(verifiedResult.Errors);
 		}
 	}
 }
