@@ -16,7 +16,7 @@ namespace KLab.Application.Core.Abstractions.Data
 		Task<string> GenerateAuthenticationTokenAsync(ApplicationUser user);
 		Task<Result> VerifyEmailAsync(ApplicationUser user, string token);
 		Task<Result> AuthenticateUserAsync(ApplicationUser user, string token);
-		Task<bool> IsUserExists(string userId);
+		Task<bool> IsUserExistsAsync(string userId);
 		Task<Result> IsEmailUniqueAsync(string email);
 		Task<Result> SignOutAsync();
 	}

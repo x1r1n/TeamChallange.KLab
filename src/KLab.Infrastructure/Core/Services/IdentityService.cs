@@ -123,7 +123,7 @@ namespace KLab.Infrastructure.Core.Services
 			return Result.Success();
 		}
 
-		public async Task<bool> IsUserExists(string userId)
+		public async Task<bool> IsUserExistsAsync(string userId)
 		{
 			return await _userManager.Users.AnyAsync(user => user.Id == userId);
 		}
@@ -145,7 +145,8 @@ namespace KLab.Infrastructure.Core.Services
 					user => request.Nickname != null ? request.Nickname : user.Nickname)
 				.SetProperty(
 					user => user.Description,
-					user => request.Description != null ? request.Description : user.Description), cancellationToken);
+					user => request.Description != null ? request.Description : user.Description),
+					cancellationToken);
 
 			await _context.SaveChangesAsync();
 
