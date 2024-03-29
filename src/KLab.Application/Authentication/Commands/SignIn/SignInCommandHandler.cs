@@ -2,7 +2,6 @@
 using KLab.Application.Core.Abstractions.Emails;
 using KLab.Application.Core.Abstractions.Messaging;
 using KLab.Domain.Core.Constants.Emails;
-using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives;
 using KLab.Domain.Core.Primitives.ResultModel;
 
