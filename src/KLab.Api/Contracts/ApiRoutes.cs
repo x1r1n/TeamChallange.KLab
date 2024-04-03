@@ -1,7 +1,13 @@
 ﻿namespace KLab.Api.Contracts
 {
+	/// <summary>
+	/// Represents the api routes for controller and action
+	/// </summary>
 	public static class ApiRoutes
 	{
+		/// <summary>
+		/// Represents the api routes for authentication controller
+		/// </summary>
 		public static class Authentication
 		{
 			public const string SignUp = "authentication/sign-up";
@@ -11,6 +17,9 @@
 			public const string SignOut = "authentication/sign-out";
 		}
 
+		/// <summary>
+		/// Represents the api routes for users controller
+		/// </summary>
 		public static class Users
 		{
 			public const string Me = "users/me";

@@ -4,7 +4,7 @@ using KLab.Api.Infrastructure.Configurations;
 using KLab.Api.Infrastructure.Handlers;
 using KLab.Application;
 using KLab.Infrastructure;
-using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http.Features;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,19 +25,15 @@ builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.Configure<FormOptions>(options =>
+{
+	options.MultipartBodyLengthLimit = 10 * 1024 * 1024;
+});
+
 builder.Host.UseSerilog((context, configuration) =>
 	configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddSwaggerGen(options =>
-{
-	options.SwaggerDoc("v1", new OpenApiInfo
-	{
-		Title = "KLab API",
-		Version = "v1"
-	});
-
-	options.AddApiKeySecurity();
-});
+builder.Services.AddSwaggerGen(options => options.ConfigureSwaggerGen());
 
 var app = builder.Build();
 

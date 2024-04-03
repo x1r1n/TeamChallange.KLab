@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KLab.Api.Controllers
 {
+	/// <summary>
+	/// The controller for user management
+	/// </summary>
 	public class UsersController : ApiController
 	{
 		public UsersController(IMediator sender)
@@ -21,6 +24,10 @@ namespace KLab.Api.Controllers
 		{
 		}
 
+		/// <summary>
+		/// Get information about current user
+		/// </summary>
+		/// <returns>The information about current user: id, username, nickname, email and user image</returns>
 		[HttpGet(ApiRoutes.Users.Me)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -41,6 +48,25 @@ namespace KLab.Api.Controllers
 				: NotFound(result.Errors);
 		}
 
+		/// <summary>
+		/// Partial or full update of user information
+		/// </summary>
+		/// <remarks>
+		/// Sample requests:
+		/// 
+		///     PATCH api/users/{id}
+		///     {
+		///         "nickname": "kryakazyabra",
+		///         "description": "I like foreign and domestic literature",
+		///     }
+		///     
+		///     PATCH api/users/{id}
+		///     {
+		///         "description": "I hope to find like-minded people with whom I can discuss ukrainian literature.",
+		///     }
+		/// </remarks>
+		/// <param name="id">The user id</param>
+		/// <param name="request">The scheme of UpdateUserRequest that represents updatable data</param>
 		[HttpPatch(ApiRoutes.Users.Update)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -65,6 +91,11 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// Get an user image
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <returns>The file with a content type that represents an image</returns>
 		[HttpGet(ApiRoutes.Users.GetImage)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -79,6 +110,11 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// Set an image for the user
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <param name="request">The sheme of UploadUserImageRequest that represents image</param>
 		[HttpPost(ApiRoutes.Users.UploadImage)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -95,6 +131,11 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// Update a user image 
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <param name="request">The scheme of UpdateUserImageRequest that represents image</param>
 		[HttpPut(ApiRoutes.Users.UpdateImage)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -111,6 +152,10 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// Delete a user image, after which the user will be without an image
+		/// </summary>
+		/// <param name="id">The user id</param>
 		[HttpDelete(ApiRoutes.Users.DeleteImage)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]

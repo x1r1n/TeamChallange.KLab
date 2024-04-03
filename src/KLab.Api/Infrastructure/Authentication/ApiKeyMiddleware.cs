@@ -4,6 +4,9 @@ using System.Net;
 
 namespace KLab.Api.Infrastructure.Authentication
 {
+	/// <summary>
+	/// The middleware for client authorization using the api key
+	/// </summary>
 	public class ApiKeyMiddleware : IMiddleware
 	{
 		private readonly IConfiguration _configuration;
@@ -13,11 +16,17 @@ namespace KLab.Api.Infrastructure.Authentication
 			_configuration = configuration;
 		}
 
+		/// <summary>
+		/// Handle incoming api key
+		/// </summary>
+		/// <param name="context">The HTTP context</param>
+		/// <param name="next">The delegate to invoke the next handler in the pipeline</param>
+		/// <returns></returns>
 		public async Task InvokeAsync(HttpContext context, RequestDelegate next)
 		{
 			if (!context.Request.Headers.TryGetValue(ApiKeyConstants.Header, out var extractedApiKey))
 			{
-				await HandleResponseAsync(context, DomainErrors.ClientAuthentication.MissingApiKey);
+				await ConfigureResponseAsync(context, DomainErrors.ClientAuthentication.MissingApiKey);
 
 				return;
 			}
@@ -26,14 +35,14 @@ namespace KLab.Api.Infrastructure.Authentication
 
 			if (string.IsNullOrWhiteSpace(apiKey))
 			{
-				await HandleResponseAsync(context, DomainErrors.ClientAuthentication.UninitializedApiKey);
+				await ConfigureResponseAsync(context, DomainErrors.ClientAuthentication.UninitializedApiKey);
 
 				return;
 			}
 
 			if (!apiKey.Equals(extractedApiKey))
 			{
-				await HandleResponseAsync(context, DomainErrors.ClientAuthentication.IncorrectApiKey);
+				await ConfigureResponseAsync(context, DomainErrors.ClientAuthentication.IncorrectApiKey);
 
 				return;
 			}
@@ -41,12 +50,17 @@ namespace KLab.Api.Infrastructure.Authentication
 			await next(context);
 		}
 
-		private Task HandleResponseAsync(HttpContext context, Error error)
+		/// <summary>
+		/// Configure response for incorrect api key
+		/// </summary>
+		/// <param name="context">The HTTP context</param>
+		/// <param name="error">The error with code and message</param>
+		private async Task ConfigureResponseAsync(HttpContext context, Error error)
 		{
 			context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 			context.Response.ContentType = "application/json";
 
-			return context.Response.WriteAsJsonAsync(error);
+			await context.Response.WriteAsJsonAsync(error);
 		}
 	}
 }
