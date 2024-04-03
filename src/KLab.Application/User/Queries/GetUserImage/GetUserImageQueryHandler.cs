@@ -5,6 +5,9 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.User.Queries.GetUserImage
 {
+	/// <summary>
+	/// Represents a command handler for retrieving a user's image
+	/// </summary>
 	public class GetUserImageQueryHandler : IQueryHandler<GetUserImageQuery, Result<GetUserImageQueryResponse>>
 	{
 		private readonly IIdentityService _identityService;
@@ -16,6 +19,12 @@ namespace KLab.Application.User.Queries.GetUserImage
 			_fileService = fileService;
 		}
 
+		/// <summary>
+		/// Handles the command to retrieve a user's image
+		/// </summary>
+		/// <param name="request">The query to retrieve the user's image</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The result containing the user's image information</returns>
 		public async Task<Result<GetUserImageQueryResponse>> Handle(GetUserImageQuery request, CancellationToken cancellationToken)
 		{
 			var isUserExists = await _identityService.IsUserExistsAsync(request.Id);
@@ -25,7 +34,7 @@ namespace KLab.Application.User.Queries.GetUserImage
 				return Result.Failure<GetUserImageQueryResponse>(DomainErrors.User.NotFound);
 			}
 
-			var getImageResult = await _fileService.GetImageAsync(request.Id);
+			var getImageResult = await _fileService.GetUserImageAsync(request.Id);
 
 			return getImageResult.IsSuccess
 				? Result.Success(getImageResult.Value)

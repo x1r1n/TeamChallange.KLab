@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KLab.Api.Controllers
 {
+	/// <summary>
+	/// The controller for user registration and authentication
+	/// </summary>
 	[AllowAnonymous]
 	public class AuthenticationController : ApiController
 	{
@@ -22,6 +25,22 @@ namespace KLab.Api.Controllers
 		{
 		}
 
+		/// <summary>
+		/// User registration in the application 
+		/// </summary>
+		/// <remarks>
+		/// Note that the username and email must be unique
+		/// 
+		/// Sample request:
+		/// 
+		///		POST api/authentication/sign-up
+		///		{
+		///			"username": "Sofia"
+		///			"email": "sofia63@example.com"
+		/// }
+		/// </remarks>
+		/// <param name="request">The scheme of SignUpRequest that represents username and email</param>
+		/// <returns>A message informing that the verification code has been sent to the email</returns>
 		[HttpPost(ApiRoutes.Authentication.SignUp)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -37,6 +56,19 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// User authentication in the application
+		/// </summary>
+		/// <remarks>
+		/// Sample request:
+		/// 
+		///		POST api/authentication/sign-in
+		///		{
+		///			"email": "sofia63@example.com"
+		///		}
+		/// </remarks>
+		/// <param name="request">The scheme of SignInRequest that represents email</param>
+		/// <returns>A message informing that the authentication code has been sent to the email</returns>
 		[HttpPost(ApiRoutes.Authentication.SignIn)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -51,6 +83,9 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// Ending a user session and sign out of the application
+		/// </summary>
 		[HttpPost(ApiRoutes.Authentication.SignOut)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -64,6 +99,19 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// Confirmation of an email with the specified confirmation code for new user registration
+		/// </summary>
+		/// <remarks>
+		/// Sample request:
+		/// 
+		///		POST api/authentication/verify-email
+		///		{
+		///			"email": "sofia63@example.com"
+		///			"verificationCode": "4813"
+		///		}
+		/// </remarks>
+		/// <param name="request">The scheme of VerifyEmailRequest that represents email and verification code</param>
 		[HttpPost(ApiRoutes.Authentication.VerifyEmail)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -78,6 +126,19 @@ namespace KLab.Api.Controllers
 				: HandleFailure(result.Errors);
 		}
 
+		/// <summary>
+		/// Authenticate a user using the authentication code sent via email
+		/// </summary>
+		/// <remarks>
+		/// Sample request:
+		/// 
+		///		POST api/authentication/authenticate-email
+		///		{
+		///			"email": "sofia63@example.com"
+		///			"authenticationCode": "4813"
+		///		}
+		/// </remarks>
+		/// <param name="request">The scheme of AuthenticateRequest that represents email and authentication code</param>
 		[HttpPost(ApiRoutes.Authentication.Authenticate)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]

@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KLab.Api.Infrastructure
 {
+	/// <summary>
+	/// Represents the base controller
+	/// </summary>
 	[Authorize]
 	[ApiController]
 	[Route("api")]
@@ -14,6 +17,11 @@ namespace KLab.Api.Infrastructure
 
 		protected ApiController(IMediator mediator) => _mediator = mediator;
 
+		/// <summary>
+		/// Handles failures based on the provided errors and returns the corresponding status code
+		/// </summary>
+		/// <param name="errors">The list of errors to handle</param>
+		/// <returns>A response with the status code and error list.</returns>
 		protected IActionResult HandleFailure(IEnumerable<Error> errors) =>
 			errors.FirstOrDefault()!.Type switch
 			{

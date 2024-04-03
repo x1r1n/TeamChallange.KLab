@@ -6,8 +6,18 @@ using Microsoft.AspNetCore.Identity;
 
 namespace KLab.Infrastructure.Core.Extensions
 {
+	/// <summary>
+	/// Provides extension methods for UserManager
+	/// </summary>
 	public static class UserManagerExtensions
 	{
+		/// <summary>
+		/// Finds a user based on the specified criteria
+		/// </summary>
+		/// <param name="manager">The user manager</param>
+		/// <param name="request">The request parameter to search</param>
+		/// <param name="type">The type of search criteria</param>
+		/// <returns>The ApplicationUser instance if found; otherwise, null</returns>
 		public async static Task<ApplicationUser> FindAsync(
 			this UserManager<ApplicationUser> manager,
 			string request, FindType type) =>

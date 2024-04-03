@@ -3,6 +3,9 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.User.Commands.UpdateUser
 {
+	/// <summary>
+	/// Represents a command for updating a user
+	/// </summary>
 	public class UpdateUserCommand : ICommand<Result>
 	{
 		public string Id { get; init; }

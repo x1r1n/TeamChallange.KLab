@@ -4,8 +4,14 @@ using KLab.Application.Core.Extensions;
 
 namespace KLab.Application.User.Commands.UploadUserImage
 {
+	/// <summary>
+	/// Represents a validotor for UploadUserImageCommand
+	/// </summary>
 	public class UploadUserImageCommandValidator : AbstractValidator<UploadUserImageCommand>
 	{
+		/// <summary>
+		/// Validate a user's id, image length and content type
+		/// </summary>
         public UploadUserImageCommandValidator()
         {
             RuleFor(request => request.Id)

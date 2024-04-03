@@ -5,7 +5,10 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.User.Commands.UploadUserImage
 {
-	internal class UploadUserImageCommandHandler : ICommandHandler<UploadUserImageCommand, Result>
+	/// <summary>
+	/// Represents a command handler for uploading a user's image
+	/// </summary>
+	public class UploadUserImageCommandHandler : ICommandHandler<UploadUserImageCommand, Result>
 	{
 		private readonly IIdentityService _identityService;
 		private readonly IFileService _fileService;
@@ -16,6 +19,12 @@ namespace KLab.Application.User.Commands.UploadUserImage
 			_fileService = fileService;
 		}
 
+		/// <summary>
+		/// Handles the command for uploading a user's image
+		/// </summary>
+		/// <param name="request">The command to upload the user's image</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The result of the operation</returns>
 		public async Task<Result> Handle(UploadUserImageCommand request, CancellationToken cancellationToken)
 		{
 			var isUserExists = await _identityService.IsUserExistsAsync(request.Id);
@@ -25,7 +34,7 @@ namespace KLab.Application.User.Commands.UploadUserImage
 				return Result.Failure(DomainErrors.User.NotFound);
 			}
 
-			var updateResult = await _fileService.UploadImageAsync(request.Id, request.Image);
+			var updateResult = await _fileService.UploadUserImageAsync(request.Id, request.Image);
 
 			return updateResult.IsSuccess 
 				? Result.Success() 

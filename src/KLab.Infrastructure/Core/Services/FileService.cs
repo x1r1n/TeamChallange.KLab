@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace KLab.Infrastructure.Core.Services
 {
+	/// <summary>
+	/// Represents the interface for the file service.
+	/// </summary>
 	public class FileService : IFileService
 	{
 		private readonly BlobContainerClient _containerClient;
@@ -17,7 +20,12 @@ namespace KLab.Infrastructure.Core.Services
 			_containerClient = containerClient;
 		}
 
-		public async Task<Result<GetUserImageQueryResponse>> GetImageAsync(string id)
+		/// <summary>
+		/// Retrieves the user's image asynchronously
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <returns>The result containing the user's image</returns>
+		public async Task<Result<GetUserImageQueryResponse>> GetUserImageAsync(string id)
 		{
 			var blob = _containerClient.GetBlobClient(id);
 
@@ -33,7 +41,13 @@ namespace KLab.Infrastructure.Core.Services
 			return Result.Success(new GetUserImageQueryResponse(id, data, contentType));
 		}
 
-		public async Task<Result> UploadImageAsync(string id, IFormFile image)
+		/// <summary>
+		/// Set an image for the user asynchronously
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <param name="file">The image to be set for the user</param>
+		/// <returns>The result of operation</returns>
+		public async Task<Result> UploadUserImageAsync(string id, IFormFile image)
 		{
 			var blob = _containerClient.GetBlobClient(id);
 			var fileExtenstion = Path.GetExtension(image.FileName);
@@ -54,7 +68,13 @@ namespace KLab.Infrastructure.Core.Services
 			return Result.Success();
 		}
 
-		public async Task<Result> UpdateImageAsync(string id, IFormFile file)
+		/// <summary>
+		/// Updates the user's image asynchronously
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <param name="file">The image file to be updated</param>
+		/// <returns>The result of the operation</returns>
+		public async Task<Result> UpdateUserImageAsync(string id, IFormFile file)
 		{
 			var blob = _containerClient.GetBlobClient(id);
 			var successDelete = await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
@@ -64,14 +84,19 @@ namespace KLab.Infrastructure.Core.Services
 				return Result.Failure(DomainErrors.User.ImageNotFound);
 			}
 
-			var updateResult = await UploadImageAsync(id, file);
+			var updateResult = await UploadUserImageAsync(id, file);
 
 			return updateResult.IsSuccess
 				? Result.Success()
 				: Result.Failure(updateResult.Errors);
 		}
 
-		public async Task<Result> DeleteImageAsync(string id)
+		/// <summary>
+		/// Deletes the user's image asynchronously
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <returns>The result of the operation</returns>
+		public async Task<Result> DeleteUserImageAsync(string id)
 		{
 			var blob = _containerClient.GetBlobClient(id);
 			var successDelete = await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
@@ -81,6 +106,11 @@ namespace KLab.Infrastructure.Core.Services
 				: Result.Failure(DomainErrors.User.ImageNotFound);
 		}
 
+		/// <summary>
+		/// Sets the content type based on the file extension
+		/// </summary>
+		/// <param name="extension">The file extension</param>
+		/// <returns>The content type corresponding to the extension</returns>
 		private string SetContentType(string extenstion) =>
 			extenstion switch
 			{

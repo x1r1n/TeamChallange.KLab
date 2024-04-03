@@ -1,7 +1,13 @@
 ﻿namespace KLab.Domain.Core.Constants
 {
-    public static class Pattern
+	/// <summary>
+	/// Represents regex patterns
+	/// </summary>
+	public static class Pattern
     {
-        public const string OnlyAlphanumericCharactersWithUnderScore = "^[a-zA-Z0-9]*$";
+		/// <summary>
+		/// Represents the pattern allowing only alphanumeric characters
+		/// </summary>
+		public const string OnlyAlphanumericCharacters = "^[a-zA-Z0-9]*$";
     }
 }

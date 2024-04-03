@@ -2,6 +2,9 @@
 
 namespace KLab.Infrastructure.Core.Services.Email
 {
+	/// <summary>
+	/// Represents SMTP configuration settings
+	/// </summary>
 	public class SmtpConfiguration
 	{
 		public string? MailServer { get; init; }

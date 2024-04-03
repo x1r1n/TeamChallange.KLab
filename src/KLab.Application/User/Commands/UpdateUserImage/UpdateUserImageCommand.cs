@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace KLab.Application.User.Commands.UpdateUserImage
 {
+	/// <summary>
+	/// Represents a command for updating a user's image.
+	/// </summary>
 	public class UpdateUserImageCommand : ICommand<Result>
 	{
 		public string Id { get; init; }

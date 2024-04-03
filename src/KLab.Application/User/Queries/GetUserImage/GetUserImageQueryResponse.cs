@@ -1,5 +1,8 @@
 ﻿namespace KLab.Application.User.Queries.GetUserImage
 {
+	/// <summary>
+	/// Represents the response for retrieving user image information.
+	/// </summary>
 	public class GetUserImageQueryResponse
 	{
 		public string Name { get; init; }

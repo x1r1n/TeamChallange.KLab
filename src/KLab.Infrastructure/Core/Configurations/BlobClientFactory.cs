@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace KLab.Infrastructure.Core.Configurations
 {
+	/// <summary>
+	/// Represents a factory for creating blob clients
+	/// </summary>
 	public class BlobClientFactory
 	{
 		private readonly BlobContainerClient _containerClient;

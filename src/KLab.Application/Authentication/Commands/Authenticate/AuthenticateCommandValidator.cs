@@ -4,8 +4,14 @@ using KLab.Application.Core.Extensions;
 
 namespace KLab.Application.Authentication.Commands.Authenticate
 {
+	/// <summary>
+	/// Represents a validator for authentication request
+	/// </summary>
 	public class AuthenticateCommandValidator : AbstractValidator<AuthenticateCommand>
 	{
+		/// <summary>
+		/// Validate email and authentication code
+		/// </summary>
 		public AuthenticateCommandValidator()
 		{
 			RuleFor(request => request.Email)

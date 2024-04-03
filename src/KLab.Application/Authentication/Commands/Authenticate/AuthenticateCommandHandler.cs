@@ -6,6 +6,9 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.Authentication.Commands.Authenticate
 {
+	/// <summary>
+	/// Represents a handler for authenticate user
+	/// </summary>
 	public class AuthenticateCommandHandler : ICommandHandler<AuthenticateCommand, Result>
 	{
 		private readonly IIdentityService _identityService;
@@ -15,6 +18,13 @@ namespace KLab.Application.Authentication.Commands.Authenticate
 			_identityService = identityService;
 		}
 
+		/// <summary>
+		/// Handle the authentication command for authenticate user by validating the user's email and authentication code
+		/// and authenticates the user
+		/// </summary>
+		/// <param name="request">AuthenticateCommand that represent email and authentication code</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The result of user authentication</returns>
 		public async Task<Result> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
 		{
 			var foundResult = await _identityService.FindUserAsync(request.Email!, FindType.Email);

@@ -5,6 +5,9 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.User.Commands.CreateUser
 {
+	/// <summary>
+	/// Represents a command for creating a user.
+	/// </summary>
 	public class CreateUserCommand : ICommand<Result>
 	{
 		public string UserName { get; init; }

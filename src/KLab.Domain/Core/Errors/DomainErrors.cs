@@ -2,8 +2,14 @@
 
 namespace KLab.Domain.Core.Errors
 {
+	/// <summary>
+	/// Provides constants for domain errors
+	/// </summary>
 	public static class DomainErrors
 	{
+		/// <summary>
+		/// Provides constants for server-related errors
+		/// </summary>
 		public static class Server
 		{
 			public static Error InternalError => Error.Failure(
@@ -11,6 +17,9 @@ namespace KLab.Domain.Core.Errors
 				"An internal error occurred on the server");
 		}
 
+		/// <summary>
+		/// Provides constants for user-related errors
+		/// </summary>
 		public static class User
 		{
 			public static Error NotFound => Error.NotFound(
@@ -26,6 +35,9 @@ namespace KLab.Domain.Core.Errors
 				"The user image is not found.");
 		}
 
+		/// <summary>
+		/// Provides constants for authentication-related errors
+		/// </summary>
 		public static class Authentication
 		{
 			public static Error UserNotFound => Error.NotFound(
@@ -53,6 +65,9 @@ namespace KLab.Domain.Core.Errors
 				"The user is unauthorized");
 		}
 
+		/// <summary>
+		/// Provides constants for client authentication-related errors
+		/// </summary>
 		public static class ClientAuthentication
 		{
 			public static Error MissingApiKey => Error.Failure(

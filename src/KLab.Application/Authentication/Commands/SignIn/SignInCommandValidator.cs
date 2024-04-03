@@ -4,8 +4,14 @@ using KLab.Application.Core.Extensions;
 
 namespace KLab.Application.Authentication.Commands.SignIn
 {
+	/// <summary>
+	/// Represents a validator for sign in request
+	/// </summary>
 	public class SignInCommandValidator : AbstractValidator<SignInCommand>
 	{
+		/// <summary>
+		/// Validate an email
+		/// </summary>
 		public SignInCommandValidator()
 		{
 			RuleFor(request => request.Email)

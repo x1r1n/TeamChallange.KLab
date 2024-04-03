@@ -1,5 +1,8 @@
 ﻿namespace KLab.Application.User.Queries.GetUser
 {
+	/// <summary>
+	/// Represents the response for retrieving user information.
+	/// </summary>
 	public class GetUserQueryResponse
 	{
 		public string? Id { get; init; }
