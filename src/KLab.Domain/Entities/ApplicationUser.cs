@@ -2,6 +2,9 @@
 
 namespace KLab.Domain.Entities
 {
+	/// <summary>
+	/// Represents an application user entity
+	/// </summary>
 	public class ApplicationUser : IdentityUser
 	{
 		private readonly DateTime _createdAt;

@@ -1,5 +1,8 @@
 ﻿namespace KLab.Domain.Core.Primitives
 {
+	/// <summary>
+	/// Represents the type of search criteria
+	/// </summary>
 	public enum FindType
 	{
 		Id = 0,

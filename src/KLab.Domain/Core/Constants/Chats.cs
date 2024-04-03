@@ -1,5 +1,8 @@
 ﻿namespace KLab.Domain.Core.Constants
 {
+	/// <summary>
+	/// Provides constants for chat room names
+	/// </summary>
 	public static class Chats
 	{
 		public const string UkrainianClassics = "KLab-UkrainianClassicsChat";

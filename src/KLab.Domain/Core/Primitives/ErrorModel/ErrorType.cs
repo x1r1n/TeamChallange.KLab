@@ -1,5 +1,8 @@
 ﻿namespace KLab.Domain.Core.Primitives.ErrorModel
 {
+	/// <summary>
+	/// Represents the type of an error
+	/// </summary>
 	public enum ErrorType
 	{
 		None = 0,

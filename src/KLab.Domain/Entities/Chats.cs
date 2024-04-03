@@ -1,5 +1,8 @@
 ﻿namespace KLab.Domain.Entities
 {
+	/// <summary>
+	/// Represents a chat entity
+	/// </summary>
 	public class Chats
 	{
 		public int Id { get; set; }

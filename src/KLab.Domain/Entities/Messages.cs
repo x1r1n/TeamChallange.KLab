@@ -1,12 +1,15 @@
 ﻿namespace KLab.Domain.Entities
 {
+	/// <summary>
+	/// Represents a message entity
+	/// </summary>
 	public class Messages
 	{
-		private readonly DateTimeOffset _createdAt;
+		private readonly DateTime _createdAt;
 
 		public int Id { get; set; }
 		public string? Content { get; set; }
-		public DateTimeOffset CreatedAt => _createdAt;
+		public DateTime CreatedAt => _createdAt;
 		public string? SenderId { get; set; }
 		public int ChatId { get; set; }
 
@@ -15,7 +18,7 @@
 
 		public Messages()
 		{
-			_createdAt = DateTimeOffset.UtcNow;
+			_createdAt = DateTime.UtcNow;
 		}
 	}
 }
