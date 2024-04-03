@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace KLab.Infrastructure.Persistence
 {
+	/// <summary>
+	/// Represents the application database context, extending IdentityDbContext for ApplicationUser.
+	/// </summary>
 	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 	{
 		public DbSet<Messages> Messages { get; set; }
@@ -20,6 +23,10 @@ namespace KLab.Infrastructure.Persistence
 		{
 		}
 
+		/// <summary>
+		/// Configures the database context and entitys
+		/// </summary>
+		/// <param name="modelBuilder">The model builder</param>
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KLab.Infrastructure.Persistence.Configurations
 {
+	/// <summary>
+	/// Configures the entity type for ApplicationUser
+	/// </summary>
 	public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 	{
 		public void Configure(EntityTypeBuilder<ApplicationUser> builder)

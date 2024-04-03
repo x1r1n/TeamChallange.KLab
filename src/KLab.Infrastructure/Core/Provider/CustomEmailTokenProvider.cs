@@ -7,6 +7,9 @@ using Microsoft.Extensions.Options;
 
 namespace KLab.Infrastructure.Core.Provider
 {
+	/// <summary>
+	/// Represents a custom email token provider for generating email tokens
+	/// </summary>
 	public class CustomEmailTokenProvider : DataProtectorTokenProvider<ApplicationUser>
 	{
 		public CustomEmailTokenProvider(
@@ -15,7 +18,17 @@ namespace KLab.Infrastructure.Core.Provider
 			ILogger<DataProtectorTokenProvider<ApplicationUser>> logger)
 			: base(dataProtectionProvider, options, logger) { }
 
-		public override async Task<string> GenerateAsync(string purpose, UserManager<ApplicationUser> manager, ApplicationUser user)
+		/// <summary>
+		/// Generates a token for the specified purpose and user
+		/// </summary>
+		/// <param name="purpose">The purpose of the token</param>
+		/// <param name="manager">The user manager</param>
+		/// <param name="user">The user for whom the token is generated</param>
+		/// <returns>The generated token</returns>
+		public override async Task<string> GenerateAsync(
+			string purpose, 
+			UserManager<ApplicationUser> manager, 
+			ApplicationUser user)
 		{
 			ArgumentNullException.ThrowIfNull(user);
 			var ms = new MemoryStream();
@@ -38,7 +51,18 @@ namespace KLab.Infrastructure.Core.Provider
 			return fourDigitNumber;
 		}
 
-		public override async Task<bool> ValidateAsync(string purpose, string token, UserManager<ApplicationUser> manager, ApplicationUser user)
+		/// <summary>
+		/// Validates a token for the specified purpose and user
+		/// </summary>
+		/// <param name="purpose">The purpose of the token</param>
+		/// <param name="token">The token to validate</param>
+		/// <param name="manager">The user manager</param>
+		/// <param name="user">The user for whom the token is validated</param>
+		/// <returns>True if the token is valid; otherwise, false</returns>
+		public override async Task<bool> ValidateAsync(
+			string purpose, string token, 
+			UserManager<ApplicationUser> manager, 
+			ApplicationUser user)
 		{
 			ArgumentNullException.ThrowIfNull(user);
 			var ms = new MemoryStream();

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KLab.Infrastructure.Persistence.Configurations
 {
+	/// <summary>
+	/// Configures the entity type for Chats
+	/// </summary>
 	public class ChatsConfiguration : IEntityTypeConfiguration<Chats>
 	{
 		public void Configure(EntityTypeBuilder<Chats> builder)

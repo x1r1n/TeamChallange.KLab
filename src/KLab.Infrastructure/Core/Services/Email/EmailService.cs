@@ -5,6 +5,9 @@ using MimeKit;
 
 namespace KLab.Infrastructure.Core.Services.Email
 {
+	/// <summary>
+	/// Provides functionality for sending emails.
+	/// </summary>
 	public class EmailService : IEmailService
 	{
 		private readonly SmtpConfiguration _smtp;
