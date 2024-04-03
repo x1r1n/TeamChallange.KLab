@@ -3,6 +3,9 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.Authentication.Commands.ConfirmEmail
 {
+	/// <summary>
+	/// Represents a verify email command for confirmed email and complete registration
+	/// </summary>
 	public class VerifyEmailCommand : ICommand<Result>
 	{
 		public string? Email { get; init; }

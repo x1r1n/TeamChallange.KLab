@@ -8,6 +8,9 @@ using KLab.Domain.Core.Primitives.ResultModel;
 
 namespace KLab.Application.Authentication.Commands.SignIn
 {
+	/// <summary>
+	/// Represents a handler for user sign in
+	/// </summary>
 	public class SignInCommandHandler : ICommandHandler<SignInCommand, Result>
 	{
 		private readonly IIdentityService _identityService;
@@ -19,6 +22,12 @@ namespace KLab.Application.Authentication.Commands.SignIn
 			_emailService = emailService;
 		}
 
+		/// <summary>
+		/// Validate request, generate authentication token and send to email for authenticate user
+		/// </summary>
+		/// <param name="request">SignInCommand that represent email</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The result of user sign in</returns>
 		public async Task<Result> Handle(SignInCommand request, CancellationToken cancellationToken)
 		{
 			var foundResult = await _identityService.FindUserAsync(request.Email!, FindType.Email);

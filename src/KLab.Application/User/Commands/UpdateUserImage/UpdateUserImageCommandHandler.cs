@@ -2,14 +2,12 @@
 using KLab.Application.Core.Abstractions.Messaging;
 using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives.ResultModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KLab.Application.User.Commands.UpdateUserImage
 {
+	/// <summary>
+	/// Represents a command handler for updating a user
+	/// </summary>
 	public class UpdateUserImageCommandHandler : ICommandHandler<UpdateUserImageCommand, Result>
 	{
 		private readonly IIdentityService _identityService;
@@ -20,6 +18,12 @@ namespace KLab.Application.User.Commands.UpdateUserImage
 			_fileService = fileService;
 		}
 
+		/// <summary>
+		/// Handles the command for updating a user's image
+		/// </summary>
+		/// <param name="request">The command to update the user's image</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The result of the operation</returns>
 		public async Task<Result> Handle(UpdateUserImageCommand request, CancellationToken cancellationToken)
 		{
 			var isUserExists = await _identityService.IsUserExistsAsync(request.Id);
@@ -29,7 +33,7 @@ namespace KLab.Application.User.Commands.UpdateUserImage
 				return Result.Failure(DomainErrors.User.NotFound);
 			}
 
-			var updateResult = await _fileService.UpdateImageAsync(request.Id, request.Image);
+			var updateResult = await _fileService.UpdateUserImageAsync(request.Id, request.Image);
 
 			return updateResult.IsSuccess
 				? Result.Success()

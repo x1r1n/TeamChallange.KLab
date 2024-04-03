@@ -2,8 +2,14 @@
 
 namespace KLab.Application.Core.Errors
 {
-	internal class ValidationErrors
+	/// <summary>
+	/// Represents a class for validation errors
+	/// </summary>
+	internal static class ValidationErrors
 	{
+		/// <summary>
+		/// Represents a class for user-related errors.
+		/// </summary>
 		internal static class User
 		{
 			internal static Error UserNameIsRequired => Error.Validition(
@@ -32,6 +38,9 @@ namespace KLab.Application.Core.Errors
 				"The file must be an image.");
 		}
 
+		/// <summary>
+		/// Represents a class for authentication-related errors.
+		/// </summary>
 		internal static class Authentication
 		{
 			internal static Error EmailIsRequired => Error.Validition(

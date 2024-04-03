@@ -4,6 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace KLab.Application.Core.Behaviours
 {
+	/// <summary>
+	/// Represents a logging behavior for requests and responses
+	/// </summary>
+	/// <typeparam name="TRequest">The type of request</typeparam>
+	/// <typeparam name="TResponse">The type of response</typeparam>
 	public class LoggingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 		where TRequest : class, IRequest<TResponse>
 		where TResponse : Result
@@ -14,6 +19,15 @@ namespace KLab.Application.Core.Behaviours
 			_logger = logger;
 		}
 
+		/// <summary>
+		/// Handles logging for requests and responses in the pipeline
+		/// </summary>
+		/// <typeparam name="TRequest">The type of request</typeparam>
+		/// <typeparam name="TResponse">The type of response</typeparam>
+		/// <param name="request">The request being handled</param>
+		/// <param name="next">The delegate to invoke the next handler in the pipeline</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The response from handling the request</returns>
 		public async Task<TResponse> Handle(
 			TRequest request,
 			RequestHandlerDelegate<TResponse> next,

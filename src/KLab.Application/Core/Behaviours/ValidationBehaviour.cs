@@ -5,6 +5,11 @@ using MediatR;
 
 namespace KLab.Application.Core.Behaviours
 {
+	/// <summary>
+	/// Represents a validation behavior
+	/// </summary>
+	/// <typeparam name="TRequest">The type of request</typeparam>
+	/// <typeparam name="TResponse">The type of response</typeparam>
 	internal sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 		where TRequest : class, IRequest<TResponse>
 		where TResponse : class
@@ -16,6 +21,15 @@ namespace KLab.Application.Core.Behaviours
 			_validators = validators;
 		}
 
+		/// <summary>
+		/// Handles the validation of requests in the pipeline
+		/// </summary>
+		/// <typeparam name="TRequest">The type of request</typeparam>
+		/// <typeparam name="TResponse">The type of response</typeparam>
+		/// <param name="request">The request being handled</param>
+		/// <param name="next">The delegate to invoke the next handler in the pipeline</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The response from handling the request</returns>
 		public async Task<TResponse> Handle(
 			TRequest request,
 			RequestHandlerDelegate<TResponse> next,

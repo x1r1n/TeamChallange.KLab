@@ -7,6 +7,9 @@ using KLab.Domain.Entities;
 
 namespace KLab.Application.User.Commands.CreateUser
 {
+	/// <summary>
+	/// Represents a command handler for creating a user
+	/// </summary>
 	public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Result>
 	{
 		private readonly IIdentityService _identityService;
@@ -18,6 +21,12 @@ namespace KLab.Application.User.Commands.CreateUser
 			_emailService = emailService;
 		}
 
+		/// <summary>
+		/// Handles the creation of a user
+		/// </summary>
+		/// <param name="request">The command to create the user</param>
+		/// <param name="cancellationToken">The cancellation token</param>
+		/// <returns>The result of the operation</returns>
 		public async Task<Result> Handle(CreateUserCommand request, CancellationToken cancellationToken)
 		{
 			var uniqueResult = await _identityService.IsEmailUniqueAsync(request.Email);
