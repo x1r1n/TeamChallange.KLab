@@ -57,12 +57,12 @@ namespace KLab.Api.Controllers
 		///     PATCH api/users/{id}
 		///     {
 		///         "nickname": "kryakazyabra",
-		///         "description": "I like foreign and domestic literature",
+		///         "description": "I like foreign and domestic literature"
 		///     }
 		///     
 		///     PATCH api/users/{id}
 		///     {
-		///         "description": "I hope to find like-minded people with whom I can discuss ukrainian literature.",
+		///         "description": "I hope to find like-minded people with whom I can discuss ukrainian literature"
 		///     }
 		/// </remarks>
 		/// <param name="id">The user id</param>

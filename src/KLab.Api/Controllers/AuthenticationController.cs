@@ -35,9 +35,9 @@ namespace KLab.Api.Controllers
 		/// 
 		///		POST api/authentication/sign-up
 		///		{
-		///			"username": "Sofia"
+		///			"username": "Sofia",
 		///			"email": "sofia63@example.com"
-		/// }
+		///		}
 		/// </remarks>
 		/// <param name="request">The scheme of SignUpRequest that represents username and email</param>
 		/// <returns>A message informing that the verification code has been sent to the email</returns>
@@ -107,7 +107,7 @@ namespace KLab.Api.Controllers
 		/// 
 		///		POST api/authentication/verify-email
 		///		{
-		///			"email": "sofia63@example.com"
+		///			"email": "sofia63@example.com",
 		///			"verificationCode": "4813"
 		///		}
 		/// </remarks>
@@ -134,7 +134,7 @@ namespace KLab.Api.Controllers
 		/// 
 		///		POST api/authentication/authenticate-email
 		///		{
-		///			"email": "sofia63@example.com"
+		///			"email": "sofia63@example.com",
 		///			"authenticationCode": "4813"
 		///		}
 		/// </remarks>
