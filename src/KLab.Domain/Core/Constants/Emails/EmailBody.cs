@@ -18,7 +18,7 @@
 		{
 			return @$"
                 <p>Dear {userName},</p>
-                <p>Your authentication code:: {authenticationCode}.</p>
+                <p>Your authentication code: {authenticationCode}.</p>
                 <p>If you did not initiate this request, please disregard this message.</p>
                 <br/>
                 <p>Best regards,</p>
