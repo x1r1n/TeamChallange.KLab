@@ -5,11 +5,9 @@
 	/// </summary>
 	public class Messages
 	{
-		private readonly DateTime _createdAt;
-
 		public int Id { get; set; }
 		public string? Content { get; set; }
-		public DateTime CreatedAt => _createdAt;
+		public DateTimeOffset CreatedAtUtc {  get; private set; }
 		public string? SenderId { get; set; }
 		public int ChatId { get; set; }
 
@@ -18,7 +16,7 @@
 
 		public Messages()
 		{
-			_createdAt = DateTime.UtcNow;
+			CreatedAtUtc = DateTimeOffset.UtcNow;
 		}
 	}
 }

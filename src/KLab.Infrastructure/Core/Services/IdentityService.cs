@@ -134,7 +134,8 @@ namespace KLab.Infrastructure.Core.Services
 					user.Id,
 					user.UserName!,
 					user.Nickname!,
-					user.Email!
+					user.Email!,
+					user.CreatedAtUtc
 				))
 				.FirstOrDefaultAsync();
 
