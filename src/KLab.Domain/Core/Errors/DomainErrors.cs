@@ -30,7 +30,7 @@ namespace KLab.Domain.Core.Errors
 				"User.AlreadyRegistered",
 				"The user with this email has already been registered.");
 
-			public static Error ImageNotFound => Error.Conflict(
+			public static Error ImageNotFound => Error.NotFound(
 				"User.ImageNotFound",
 				"The user image is not found."); 
 		}
