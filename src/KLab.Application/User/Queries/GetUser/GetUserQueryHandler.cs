@@ -26,12 +26,9 @@ namespace KLab.Application.User.Queries.GetUser
 		{
 			var result = await _identityService.GetUserAsync(request.UserId!);
 
-			if (result.isFailure)
-			{
-				return Result.Failure<GetUserQueryResponse>(result.Errors);
-			}
-
-			return result;
+			return result.IsSuccess 
+				? result
+				: Result.Failure<GetUserQueryResponse>(result.Errors);
 		}
 	}
 }
