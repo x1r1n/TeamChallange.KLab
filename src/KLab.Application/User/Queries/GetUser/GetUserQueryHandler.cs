@@ -24,7 +24,7 @@ namespace KLab.Application.User.Queries.GetUser
 		/// <returns>The result containing the user information</returns>
 		public async Task<Result<GetUserQueryResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
 		{
-			var result = await _identityService.GetUserAsync(request.UserName!);
+			var result = await _identityService.GetUserAsync(request.UserId!);
 
 			if (result.isFailure)
 			{
