@@ -28,7 +28,7 @@ namespace KLab.Api.Controllers
 		/// <summary>
 		/// Get information about current user
 		/// </summary>
-		/// <returns>The information about current user: id, username, nickname, email and user image</returns>
+		/// <returns>The information about current user: id, username, nickname, email and registration date and time</returns>
 		[HttpGet(ApiRoutes.Users.Me)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -45,7 +45,24 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Partial or full update of user information
+		/// Get information about user with specified id
+		/// </summary>
+		/// <returns>The information about user: id, username, nickname, email and registration date and time</returns>
+		[HttpGet(ApiRoutes.Users.User)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
+		public async Task<IActionResult> GetUser(string id)
+		{
+			var result = await _mediator.Send(new GetUserQuery(id));
+
+			return result.IsSuccess
+				? Ok(result.Value)
+				: NotFound(result.Errors);
+		}
+
+		/// <summary>
+		/// Partial or full update of current user information
 		/// </summary>
 		/// <remarks>
 		/// Sample requests:
@@ -63,7 +80,7 @@ namespace KLab.Api.Controllers
 		/// </remarks>
 		/// <param name="id">The user id</param>
 		/// <param name="request">The scheme of UpdateUserRequest that represents updatable data</param>
-		[HttpPatch(ApiRoutes.Users.Update)]
+		[HttpPatch(ApiRoutes.Users.User)]
 		[UserIdComparisonFilter]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -82,11 +99,11 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Get a user image
+		/// Get an image of user with specified id
 		/// </summary>
 		/// <param name="id">The user id</param>
 		/// <returns>The file with a content type that represents an image</returns>
-		[HttpGet(ApiRoutes.Users.GetImage)]
+		[HttpGet(ApiRoutes.Users.Image)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
@@ -101,11 +118,11 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Set an image for the user
+		/// Set an image for current user
 		/// </summary>
 		/// <param name="id">The user id</param>
 		/// <param name="request">The sheme of UploadUserImageRequest that represents image</param>
-		[HttpPost(ApiRoutes.Users.UploadImage)]
+		[HttpPost(ApiRoutes.Users.Image)]
 		[UserIdComparisonFilter]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -123,11 +140,11 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Update a user image 
+		/// Update an image of current user 
 		/// </summary>
 		/// <param name="id">The user id</param>
 		/// <param name="request">The scheme of UpdateUserImageRequest that represents image</param>
-		[HttpPut(ApiRoutes.Users.UpdateImage)]
+		[HttpPut(ApiRoutes.Users.Image)]
 		[UserIdComparisonFilter]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
@@ -145,10 +162,10 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Delete a user image, after which the user will be without an image
+		/// Delete an image of current user, after which the user will be without an image
 		/// </summary>
 		/// <param name="id">The user id</param>
-		[HttpDelete(ApiRoutes.Users.DeleteImage)]
+		[HttpDelete(ApiRoutes.Users.Image)]
 		[UserIdComparisonFilter]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
