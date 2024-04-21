@@ -2,6 +2,7 @@
 using KLab.Api.Infrastructure;
 using KLab.Application.Authentication.Commands.Authenticate;
 using KLab.Application.Authentication.Commands.ConfirmEmail;
+using KLab.Application.Authentication.Commands.ResendVerificationCode;
 using KLab.Application.Authentication.Commands.SignIn;
 using KLab.Application.Authentication.Commands.SignOut;
 using KLab.Application.User.Commands.CreateUser;
@@ -17,7 +18,6 @@ namespace KLab.Api.Controllers
 	/// <summary>
 	/// The controller for user registration and authentication
 	/// </summary>
-	[AllowAnonymous]
 	public class AuthenticationController : ApiController
 	{
 		public AuthenticationController(IMediator mediator)
@@ -35,13 +35,14 @@ namespace KLab.Api.Controllers
 		/// 
 		///		POST api/authentication/sign-up
 		///		{
-		///			"username": "Sofia"
+		///			"username": "Sofia",
 		///			"email": "sofia63@example.com"
-		/// }
+		///		}
 		/// </remarks>
 		/// <param name="request">The scheme of SignUpRequest that represents username and email</param>
 		/// <returns>A message informing that the verification code has been sent to the email</returns>
 		[HttpPost(ApiRoutes.Authentication.SignUp)]
+		[AllowAnonymous]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
@@ -70,6 +71,7 @@ namespace KLab.Api.Controllers
 		/// <param name="request">The scheme of SignInRequest that represents email</param>
 		/// <returns>A message informing that the authentication code has been sent to the email</returns>
 		[HttpPost(ApiRoutes.Authentication.SignIn)]
+		[AllowAnonymous]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
@@ -90,6 +92,7 @@ namespace KLab.Api.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> UserSignOut()
 		{
 			var result = await _mediator.Send(new SignOutCommand());
@@ -107,12 +110,13 @@ namespace KLab.Api.Controllers
 		/// 
 		///		POST api/authentication/verify-email
 		///		{
-		///			"email": "sofia63@example.com"
+		///			"email": "sofia63@example.com",
 		///			"verificationCode": "4813"
 		///		}
 		/// </remarks>
 		/// <param name="request">The scheme of VerifyEmailRequest that represents email and verification code</param>
 		[HttpPost(ApiRoutes.Authentication.VerifyEmail)]
+		[AllowAnonymous]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
@@ -134,12 +138,13 @@ namespace KLab.Api.Controllers
 		/// 
 		///		POST api/authentication/authenticate-email
 		///		{
-		///			"email": "sofia63@example.com"
+		///			"email": "sofia63@example.com",
 		///			"authenticationCode": "4813"
 		///		}
 		/// </remarks>
 		/// <param name="request">The scheme of AuthenticateRequest that represents email and authentication code</param>
 		[HttpPost(ApiRoutes.Authentication.Authenticate)]
+		[AllowAnonymous]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
@@ -150,6 +155,34 @@ namespace KLab.Api.Controllers
 
 			return result.IsSuccess
 				? NoContent()
+				: HandleFailure(result.Errors);
+		}
+
+		/// <summary>
+		/// Resend verification code  
+		/// </summary>
+		/// <remarks>
+		/// Sample request:
+		/// 
+		///		POST api/authentication/resend-verification-code
+		///		{
+		///			"email": "sofia63@example.com"
+		///		}
+		/// </remarks>
+		/// <param name="request">The scheme of ResendVerificationCodeRequest that represents email</param>
+		/// <returns>A message informing that the verification code has been sent to the email</returns>
+		[HttpPost(ApiRoutes.Authentication.ResendVerificationCode)]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
+		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
+		public async Task<IActionResult> ResendVerificationCode(ResendVerificationCodeRequest request)
+		{
+			var result = await _mediator.Send(new ResendVerificationCodeCommand(request.Email!));
+
+			return result.IsSuccess
+				? Ok(DomainResponses.Email.VerificationCodeSent)
 				: HandleFailure(result.Errors);
 		}
 	}

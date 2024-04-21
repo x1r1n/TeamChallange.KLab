@@ -1,7 +1,7 @@
 ﻿namespace KLab.Domain.Core.Responses
 {
 	/// <summary>
-	/// Provides constants for domain responses related to email
+	/// Provides constants for domain responses
 	/// </summary>
 	public static class DomainResponses
 	{

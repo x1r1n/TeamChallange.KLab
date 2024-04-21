@@ -22,6 +22,15 @@
 		}
 
 		/// <summary>
+		/// Creates an internal failure error
+		/// </summary>
+		/// <param name="code">The error code</param>
+		/// <param name="description">The error description</param>
+		/// <returns>The failure error</returns>
+		public static Error InternalFailure(string code, string description) =>
+			new(code, description, ErrorType.InternalFailure);
+
+		/// <summary>
 		/// Creates a failure error
 		/// </summary>
 		/// <param name="code">The error code</param>
@@ -29,6 +38,15 @@
 		/// <returns>The failure error</returns>
 		public static Error Failure(string code, string description) =>
 			new(code, description, ErrorType.Failure);
+
+		/// <summary>
+		/// Creates a forbidden error
+		/// </summary>
+		/// <param name="code">The error code</param>
+		/// <param name="description">The error description</param>
+		/// <returns>The forbidden error</returns>
+		public static Error Forbidden(string code, string description) =>
+			new(code, description, ErrorType.Forbidden);
 
 		/// <summary>
 		/// Creates a validation error

@@ -5,10 +5,12 @@
 	/// </summary>
 	public enum ErrorType
 	{
-		None = 0,
-		Failure = 1,
-		Validition = 2,
-		NotFound = 3,
-		Conflict = 4
+		None = 200,
+		Failure = 400,
+		Forbidden = 403,
+		NotFound = 404,
+		Conflict = 409,
+		Validition = 422,
+		InternalFailure = 500
 	}
 }

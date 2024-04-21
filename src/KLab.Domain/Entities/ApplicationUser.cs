@@ -7,17 +7,15 @@ namespace KLab.Domain.Entities
 	/// </summary>
 	public class ApplicationUser : IdentityUser
 	{
-		private readonly DateTime _createdAt;
-
 		public string? Nickname { get; set; }
 		public string? Description { get; set; }
-		public DateTime CreatedAt => _createdAt;
+		public DateTimeOffset CreatedAtUtc { get; private set; }
 		public List<ChatUsers>? Chats { get; set; }
 		public List<Messages>? Messages { get; set; }
 
 		public ApplicationUser()
 		{
-			_createdAt = DateTime.UtcNow;
+			CreatedAtUtc = DateTimeOffset.UtcNow;
 		}
 	}
 }

@@ -8,11 +8,11 @@ namespace KLab.Application.User.Queries.GetUser
 	/// </summary>
 	public class GetUserQuery : IQuery<Result<GetUserQueryResponse>>
 	{
-		public string? UserName { get; init; }
+		public string? UserId { get; init; }
 
-		public GetUserQuery(string username)
+		public GetUserQuery(string userId)
 		{
-			UserName = username;
+			UserId = userId;
 		}
 	}
 }

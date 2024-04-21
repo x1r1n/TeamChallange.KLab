@@ -122,19 +122,20 @@ namespace KLab.Infrastructure.Core.Services
 		/// <summary>
 		/// Retrieves a user asynchronously based on the specified username
 		/// </summary>
-		/// <param name="username">The username</param>
+		/// <param name="userId">The username</param>
 		/// <returns>The result containing the user information</returns>
-		public async Task<Result<GetUserQueryResponse>> GetUserAsync(string username)
+		public async Task<Result<GetUserQueryResponse>> GetUserAsync(string userId)
 		{
 			var user = await _userManager.Users
 				.AsNoTracking()
-				.Where(user => user.UserName == username)
+				.Where(user => user.Id == userId)
 				.Select(user => new GetUserQueryResponse
 				(
 					user.Id,
 					user.UserName!,
 					user.Nickname!,
-					user.Email!
+					user.Email!,
+					user.CreatedAtUtc
 				))
 				.FirstOrDefaultAsync();
 

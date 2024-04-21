@@ -18,7 +18,7 @@ namespace KLab.Infrastructure.Core.Extensions
 		/// <param name="stream">The stream to write</param>
 		/// <returns>A binary writer instance</returns>
 		public static BinaryWriter CreateWriter(this Stream stream)
-			=> new BinaryWriter(stream, DefaultEncoding, true);
+			=> new(stream, DefaultEncoding, true);
 
 		/// <summary>
 		/// Writes a DateTimeOffset value to the stream

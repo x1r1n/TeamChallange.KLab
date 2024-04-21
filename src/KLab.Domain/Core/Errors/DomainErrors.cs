@@ -12,7 +12,7 @@ namespace KLab.Domain.Core.Errors
 		/// </summary>
 		public static class Server
 		{
-			public static Error InternalError => Error.Failure(
+			public static Error InternalError => Error.InternalFailure(
 				"Server.InternalError",
 				"An internal error occurred on the server");
 		}
@@ -30,9 +30,9 @@ namespace KLab.Domain.Core.Errors
 				"User.AlreadyRegistered",
 				"The user with this email has already been registered.");
 
-			public static Error ImageNotFound => Error.Conflict(
+			public static Error ImageNotFound => Error.NotFound(
 				"User.ImageNotFound",
-				"The user image is not found.");
+				"The user image is not found."); 
 		}
 
 		/// <summary>
@@ -81,6 +81,13 @@ namespace KLab.Domain.Core.Errors
 			public static Error IncorrectApiKey => Error.Failure(
 				"ClientAuthentication.IncorrectApiKey",
 				"The API Key is incorrect.");
+		}
+
+		public static class Request
+		{
+			public static Error InappropriateUserIdentifier => Error.Forbidden(
+				"Request.InappropriateUserIdentifier",
+				"The user id in the request does not match the authenticated user id");
 		}
 	}
 }

@@ -10,11 +10,11 @@ namespace KLab.Application.User.Queries.GetUser
 	public class GetUserQueryValidator : AbstractValidator<GetUserQuery>
 	{
 		/// <summary>
-		/// Vaidate a username
+		/// Vaidate a user id
 		/// </summary>
 		public GetUserQueryValidator()
 		{
-			RuleFor(request => request.UserName)
+			RuleFor(request => request.UserId)
 				.NotEmpty()
 				.WithError(DomainErrors.Server.InternalError);
 		}
