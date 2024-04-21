@@ -15,6 +15,7 @@
 			public const string VerifyEmail = "authentication/verify-email";
 			public const string Authenticate = "authentication/authenticate-email";
 			public const string SignOut = "authentication/sign-out";
+			public const string ResendVerificationCode = "authentication/resend-verification-code";
 		}
 
 		/// <summary>
