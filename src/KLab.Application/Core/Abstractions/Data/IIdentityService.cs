@@ -74,9 +74,9 @@ namespace KLab.Application.Core.Abstractions.Data
 		/// <summary>
 		/// Checks asynchronously if a user exists
 		/// </summary>
-		/// <param name="userId">The user id</param>
+		/// <param name="id">The user id</param>
 		/// <returns>A boolean indicating whether the user exists</returns>
-		Task<bool> IsUserExistsAsync(string userId);
+		Task<bool> IsUserExistsAsync(string id);
 
 		/// <summary>
 		/// Checks asynchronously if an email is unique

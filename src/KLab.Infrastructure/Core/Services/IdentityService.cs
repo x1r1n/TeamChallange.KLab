@@ -122,13 +122,13 @@ namespace KLab.Infrastructure.Core.Services
 		/// <summary>
 		/// Retrieves a user asynchronously based on the specified username
 		/// </summary>
-		/// <param name="userId">The username</param>
+		/// <param name="id">The username</param>
 		/// <returns>The result containing the user information</returns>
-		public async Task<Result<GetUserQueryResponse>> GetUserAsync(string userId)
+		public async Task<Result<GetUserQueryResponse>> GetUserAsync(string id)
 		{
 			var user = await _userManager.Users
 				.AsNoTracking()
-				.Where(user => user.Id == userId)
+				.Where(user => user.Id == id)
 				.Select(user => new GetUserQueryResponse
 				(
 					user.Id,
@@ -167,11 +167,11 @@ namespace KLab.Infrastructure.Core.Services
 		/// <summary>
 		/// Checks asynchronously if a user exists
 		/// </summary>
-		/// <param name="userId">The user id</param>
+		/// <param name="id">The user id</param>
 		/// <returns>A boolean indicating whether the user exists</returns>
-		public async Task<bool> IsUserExistsAsync(string userId)
+		public async Task<bool> IsUserExistsAsync(string id)
 		{
-			return await _userManager.Users.AnyAsync(user => user.Id == userId);
+			return await _userManager.Users.AnyAsync(user => user.Id == id);
 		}
 
 		/// <summary>
