@@ -95,9 +95,9 @@ namespace KLab.Application.Core.Abstractions.Data
 		/// <summary>
 		/// Assigns a role to a user by specified identifier
 		/// </summary>
-		/// <param name="id">The user id</param>
+		/// <param name="user">The user to whom the role is assigned</param>
 		/// <param name="role">The role to assign</param>
 		/// <returns>The result of assigning role</returns>
-		Task<Result> AssignRoleAsync(string id, Roles role);
+		Task<Result> AssignRoleAsync(ApplicationUser user, Roles role);
 	}
 }

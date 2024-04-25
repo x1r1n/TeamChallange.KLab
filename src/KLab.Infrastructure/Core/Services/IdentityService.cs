@@ -39,19 +39,12 @@ namespace KLab.Infrastructure.Core.Services
 		/// <summary>
 		/// Assigns a role to a user by specified identifier
 		/// </summary>
-		/// <param name="id">The user id</param>
+		/// <param name="user">The user to whom the role is assigned</param>
 		/// <param name="role">The role to assign</param>
 		/// <returns>The result of assign role</returns>
-		public async Task<Result> AssignRoleAsync(string id, Roles role)
+		public async Task<Result> AssignRoleAsync(ApplicationUser user, Roles role)
 		{
-			var findResult = await FindUserAsync(id, FindType.Id);
-
-			if (findResult.isFailure)
-			{
-				return Result.Failure(findResult.Errors);
-			}
-
-			var roleName = nameof(role.Administrator);
+			var roleName = role.ToString();
 			var roleExists = await _roleManager.RoleExistsAsync(roleName);
 
 			if (!roleExists)
@@ -59,7 +52,6 @@ namespace KLab.Infrastructure.Core.Services
 				await _roleManager.CreateAsync(new IdentityRole(roleName));
 			}
 
-			var user = findResult.Value;
 			var removeRoleName = await _userManager.GetRolesAsync(user);
 			var assignRoleResult = await _userManager.AddToRoleAsync(user, roleName);
 
@@ -68,7 +60,7 @@ namespace KLab.Infrastructure.Core.Services
 				return Result.Failure(assignRoleResult.Errors.ToDomainErrors());
 			}
 
-			var removeRoleResult = await _userManager.RemoveFromRoleAsync(user, removeRoleName.First());
+			var removeRoleResult = await _userManager.RemoveFromRoleAsync(user, removeRoleName.FirstOrDefault()!);
 
 			if (!removeRoleResult.Succeeded)
 			{
