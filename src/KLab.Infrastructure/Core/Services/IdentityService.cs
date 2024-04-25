@@ -1,6 +1,7 @@
 ﻿using KLab.Application.Core.Abstractions.Data;
 using KLab.Application.User.Commands.UpdateUser;
 using KLab.Application.User.Queries.GetUser;
+using KLab.Domain.Core.Enums;
 using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives;
 using KLab.Domain.Core.Primitives.ResultModel;
@@ -20,16 +21,63 @@ namespace KLab.Infrastructure.Core.Services
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly ApplicationDbContext _context;
 
 		public IdentityService(
 			UserManager<ApplicationUser> userManager,
 			SignInManager<ApplicationUser> signInManager,
+			RoleManager<IdentityRole> roleManager,
 			ApplicationDbContext context)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_roleManager = roleManager;
 			_context = context;
+		}
+
+		/// <summary>
+		/// Assigns a role to a user by specified identifier
+		/// </summary>
+		/// <param name="id">The user id</param>
+		/// <param name="role">The role to assign</param>
+		/// <returns>The result of assign role</returns>
+		public async Task<Result> AssignRoleAsync(string id, Roles role)
+		{
+			var findResult = await FindUserAsync(id, FindType.Id);
+
+			if (findResult.isFailure)
+			{
+				return Result.Failure(findResult.Errors);
+			}
+
+			var roleName = nameof(role.Administrator);
+			var roleExists = await _roleManager.RoleExistsAsync(roleName);
+
+			if (!roleExists)
+			{
+				await _roleManager.CreateAsync(new IdentityRole(roleName));
+			}
+
+			var user = findResult.Value;
+			var removeRoleName = await _userManager.GetRolesAsync(user);
+			var assignRoleResult = await _userManager.AddToRoleAsync(user, roleName);
+
+			if (!assignRoleResult.Succeeded)
+			{
+				return Result.Failure(assignRoleResult.Errors.ToDomainErrors());
+			}
+
+			var removeRoleResult = await _userManager.RemoveFromRoleAsync(user, removeRoleName.First());
+
+			if (!removeRoleResult.Succeeded)
+			{
+				await _userManager.RemoveFromRoleAsync(user, roleName);
+
+				return Result.Failure(removeRoleResult.Errors.ToDomainErrors());
+			}
+
+			return Result.Success();
 		}
 
 		/// <summary>
@@ -58,7 +106,7 @@ namespace KLab.Infrastructure.Core.Services
 		}
 
 		/// <summary>
-		/// Creates a new user asynchronously
+		/// Creates a new user and assigns user role
 		/// </summary>
 		/// <param name="request">The user information to create</param>
 		/// <returns>The result of the operation</returns>
@@ -71,7 +119,23 @@ namespace KLab.Infrastructure.Core.Services
 				return Result.Failure(creationResult.Errors.ToDomainErrors());
 			}
 
-			return Result.Success();
+			var roleExists = await _roleManager.RoleExistsAsync(nameof(Roles.User));
+
+			if (!roleExists)
+			{
+				await _roleManager.CreateAsync(new IdentityRole(nameof(Roles.User)));
+			}
+
+			var assignRoleResult = await _userManager.AddToRoleAsync(request, nameof(Roles.User));
+
+            if (!assignRoleResult.Succeeded)
+            {
+				await _userManager.DeleteAsync(request);
+
+				return Result.Failure(assignRoleResult.Errors.ToDomainErrors());
+            }
+
+            return Result.Success();
 		}
 
 		/// <summary>
