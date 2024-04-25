@@ -5,15 +5,15 @@
 	/// </summary>
 	public static class Chats
 	{
-		public const string UkrainianClassics = "KLab-UkrainianClassicsChat";
-		public const string NonfictionLiterature = "KLab-NonfictionLiteratureChat";
-		public const string ModernBooks = "KLab-ModernBooksChat";
-		public const string ForeignLiterature = "KLab-ForeignLiteratureChat";
-		public const string NewBooks = "KLab-NewBooksChat";
-		public const string LiveMeetings = "KLab-LiveMeetingsChat";
-		public const string ChildrenLiterature = "KLab-ChildrenLiteratureChat";
-		public const string BookExchange = "KLab-BookExchangeChat";
-		public const string AuthorsBiographies = "KLab-AuthorsBiographiesChat";
-		public const string PrivateMessages = "KLab-PrivateMessages";
+		public const string UkrainianClassics = "UkrainianClassics";
+		public const string NonfictionLiterature = "NonfictionLiterature";
+		public const string ModernBooks = "ModernBooks";
+		public const string ForeignLiterature = "ForeignLiterature";
+		public const string NewBooks = "NewBooks";
+		public const string LiveMeetings = "LiveMeetings";
+		public const string ChildrenLiterature = "ChildrenLiterature";
+		public const string BookExchange = "BookExchange";
+		public const string AuthorsBiographies = "AuthorsBiographies";
+		public const string PrivateMessages = "PrivateMessages";
 	}
 }
