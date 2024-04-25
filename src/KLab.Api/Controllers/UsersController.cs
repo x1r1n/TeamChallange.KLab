@@ -20,8 +20,8 @@ namespace KLab.Api.Controllers
 	/// </summary>
 	public class UsersController : ApiController
 	{
-		public UsersController(IMediator sender)
-			: base(sender)
+		public UsersController(IMediator mediator)
+			: base(mediator)
 		{
 		}
 
