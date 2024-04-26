@@ -1,6 +1,5 @@
 ﻿using KLab.Api.Contracts;
 using KLab.Api.Infrastructure;
-using KLab.Api.Infrastructure.Filters;
 using KLab.Application.User.Commands.DeleteUserImage;
 using KLab.Application.User.Commands.UpdateUser;
 using KLab.Application.User.Commands.UpdateUserImage;
@@ -8,7 +7,7 @@ using KLab.Application.User.Commands.UploadUserImage;
 using KLab.Application.User.Queries.GetUser;
 using KLab.Application.User.Queries.GetUserImage;
 using KLab.Contracts.User;
-using KLab.Domain.Core.Primitives.ErrorModel;
+using KLab.Domain.Core.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -26,18 +25,27 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Get information about current user
+		/// Retrieves information about the currently authenticated user
 		/// </summary>
-		/// <returns>The information about current user: id, username, nickname, email and registration date and time</returns>
+		/// <remarks>
+		/// Returns the user id, username, nickname, email, and registration date with time in UTC
+		/// </remarks>
+		/// <response code="200">If the user information is successfully retrieved</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="401">If the user is unauthorized due to lack or invalid credentials</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpGet(ApiRoutes.Users.Me)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> GetMe()
 		{
-			var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			var result = await _mediator.Send(new GetUserQuery(userId!));
+			if (id is null)
+			{
+				return Unauthorized(DomainErrors.Authentication.Unauthorized);
+			}
+
+			var result = await _mediator.Send(new GetUserQuery(id));
 
 			return result.IsSuccess
 				? Ok(result.Value)
@@ -45,13 +53,17 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Get information about user with specified id
+		/// Retrieves information about a user by their id
 		/// </summary>
-		/// <returns>The information about user: id, username, nickname, email and registration date and time</returns>
+		/// <remarks>
+		/// Returns the user id, username, nickname, email, and registration date with time in UTC
+		/// </remarks>
+		/// <param name="id">The id of the user to retrieve information for.</param>
+		/// <response code="200">If the user information is successfully retrieved</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpGet(ApiRoutes.Users.User)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> GetUser(string id)
 		{
 			var result = await _mediator.Send(new GetUserQuery(id));
@@ -62,14 +74,14 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Partial or full update of current user information
+		/// Updates information about a user by their id
 		/// </summary>
 		/// <remarks>
 		/// Sample requests:
 		/// 
 		///     PATCH api/users/{id}
 		///     {
-		///         "nickname": "kryakazyabra",
+		///         "nickname": "Alice",
 		///         "description": "I like foreign and domestic literature"
 		///     }
 		///     
@@ -77,17 +89,29 @@ namespace KLab.Api.Controllers
 		///     {
 		///         "description": "I hope to find like-minded people with whom I can discuss ukrainian literature"
 		///     }
+		///     
+		///		PATCH api/users/{id}
+		///     {
+		///         "nickname": "Franko"
+		///     }
 		/// </remarks>
-		/// <param name="id">The user id</param>
-		/// <param name="request">The scheme of UpdateUserRequest that represents updatable data</param>
+		/// <param name="request">The request containing updated user information</param>
+		/// <response code="204">If the user information is successfully updated</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="401">If the user is unauthorized due to lack or invalid credentials</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="422">If the update process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPatch(ApiRoutes.Users.User)]
-		[UserIdComparisonFilter]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
-		public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
+		public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
 		{
+			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (id is null)
+			{
+				return Unauthorized(DomainErrors.Authentication.Unauthorized);
+			}
+
 			var result = await _mediator.Send(new UpdateUserCommand(
 				id,
 				request.Nickname!,
@@ -99,15 +123,19 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Get an image of user with specified id
+		/// Retrieves the image of a user by their id
 		/// </summary>
-		/// <param name="id">The user id</param>
-		/// <returns>The file with a content type that represents an image</returns>
+		/// <remarks>
+		/// The response contains the image data in the form of a file stream, 
+		/// along with information about the content type and file name
+		/// </remarks>
+		/// <param name="id">The id of the user to retrieve the image for</param>
+		/// <response code="200">If the user image is successfully retrieved</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="404">If the user or image is not found</response>
+		/// <response code="422">If the image retrieval process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpGet(ApiRoutes.Users.Image)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
 		public async Task<IActionResult> GetUserImage(string id)
 		{
 			var result = await _mediator.Send(new GetUserImageQuery(id));
@@ -118,18 +146,26 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Set an image for current user
+		/// Uploads an image for a user by their id
 		/// </summary>
-		/// <param name="id">The user id</param>
-		/// <param name="request">The sheme of UploadUserImageRequest that represents image</param>
+		/// <param name="request">The request containing the image data</param>
+		/// <response code="204">If the user image is successfully uploaded</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="401">If the user is unauthorized due to lack or invalid credentials</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="409">If the user already has an image uploaded</response>
+		/// <response code="422">If the image upload process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPost(ApiRoutes.Users.Image)]
-		[UserIdComparisonFilter]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
-		public async Task<IActionResult> UploadUserImage(string id, UploadUserImageRequest request)
+		public async Task<IActionResult> UploadUserImage(UploadUserImageRequest request)
 		{
+			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (id is null)
+			{
+				return Unauthorized(DomainErrors.Authentication.Unauthorized);
+			}
+
 			var result = await _mediator.Send(new UploadUserImageCommand(
 				id,
 				request.Image!));
@@ -140,18 +176,25 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Update an image of current user 
+		/// Updates the image for a user by their id 
 		/// </summary>
-		/// <param name="id">The user id</param>
-		/// <param name="request">The scheme of UpdateUserImageRequest that represents image</param>
+		/// <param name="request">The request containing the updated image data</param>
+		/// <response code="204">If the user image is successfully updated</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="401">If the user is unauthorized due to lack or invalid credentials</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="422">If the image upload process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPut(ApiRoutes.Users.Image)]
-		[UserIdComparisonFilter]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
-		public async Task<IActionResult> UpdateUserImage(string id, UpdateUserImageRequest request)
+		public async Task<IActionResult> UpdateUserImage(UpdateUserImageRequest request)
 		{
+			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (id is null)
+			{
+				return Unauthorized(DomainErrors.Authentication.Unauthorized);
+			}
+
 			var result = await _mediator.Send(new UpdateUserImageCommand(
 				id,
 				request.Image!));
@@ -162,17 +205,24 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Delete an image of current user, after which the user will be without an image
+		/// Deletes the image of the currently authenticated user
 		/// </summary>
-		/// <param name="id">The user id</param>
+		/// <response code="204">If the user image is successfully deleted</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="401">If the user is unauthorized due to lack or invalid credentials</response>
+		/// <response code="404">If the user or image is not found</response>
+		/// <response code="422">If the image deletion process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpDelete(ApiRoutes.Users.Image)]
-		[UserIdComparisonFilter]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
-		public async Task<IActionResult> DeleteUserImage(string id)
+		public async Task<IActionResult> DeleteUserImage()
 		{
+			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (id is null)
+			{
+				return Unauthorized(DomainErrors.Authentication.Unauthorized);
+			}
+
 			var result = await _mediator.Send(new DeleteUserImageCommand(id));
 
 			return result.IsSuccess
