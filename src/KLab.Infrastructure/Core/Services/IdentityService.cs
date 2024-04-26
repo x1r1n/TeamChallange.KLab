@@ -131,6 +131,20 @@ namespace KLab.Infrastructure.Core.Services
 		}
 
 		/// <summary>
+		/// Deletes the specified user from the application
+		/// </summary>
+		/// <param name="user">The user to be deleted</param>
+		/// <returns>The result of deleting user</returns>
+		public async Task<Result> DeleteUserAsync(ApplicationUser user)
+		{
+			var deleteResult = await _userManager.DeleteAsync(user);
+
+			return deleteResult.Succeeded
+				? Result.Success()
+				: Result.Failure(deleteResult.Errors.ToDomainErrors());
+		}
+
+		/// <summary>
 		/// Finds a user asynchronously based on the specified criteria
 		/// </summary>
 		/// <param name="request">The search criteria</param>
