@@ -1,6 +1,7 @@
 ﻿using KLab.Application.Core.Abstractions.Data;
 using KLab.Application.User.Commands.UpdateUser;
 using KLab.Application.User.Queries.GetUser;
+using KLab.Domain.Core.Enums;
 using KLab.Domain.Core.Errors;
 using KLab.Domain.Core.Primitives;
 using KLab.Domain.Core.Primitives.ResultModel;
@@ -20,16 +21,55 @@ namespace KLab.Infrastructure.Core.Services
 	{
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly ApplicationDbContext _context;
 
 		public IdentityService(
 			UserManager<ApplicationUser> userManager,
 			SignInManager<ApplicationUser> signInManager,
+			RoleManager<IdentityRole> roleManager,
 			ApplicationDbContext context)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_roleManager = roleManager;
 			_context = context;
+		}
+
+		/// <summary>
+		/// Assigns a role to a user by specified identifier
+		/// </summary>
+		/// <param name="user">The user to whom the role is assigned</param>
+		/// <param name="role">The role to assign</param>
+		/// <returns>The result of assign role</returns>
+		public async Task<Result> AssignRoleAsync(ApplicationUser user, Roles role)
+		{
+			var roleName = role.ToString();
+			var roleExists = await _roleManager.RoleExistsAsync(roleName);
+
+			if (!roleExists)
+			{
+				await _roleManager.CreateAsync(new IdentityRole(roleName));
+			}
+
+			var removeRoleName = await _userManager.GetRolesAsync(user);
+			var assignRoleResult = await _userManager.AddToRoleAsync(user, roleName);
+
+			if (!assignRoleResult.Succeeded)
+			{
+				return Result.Failure(assignRoleResult.Errors.ToDomainErrors());
+			}
+
+			var removeRoleResult = await _userManager.RemoveFromRoleAsync(user, removeRoleName.FirstOrDefault()!);
+
+			if (!removeRoleResult.Succeeded)
+			{
+				await _userManager.RemoveFromRoleAsync(user, roleName);
+
+				return Result.Failure(removeRoleResult.Errors.ToDomainErrors());
+			}
+
+			return Result.Success();
 		}
 
 		/// <summary>
@@ -58,7 +98,7 @@ namespace KLab.Infrastructure.Core.Services
 		}
 
 		/// <summary>
-		/// Creates a new user asynchronously
+		/// Creates a new user and assigns user role
 		/// </summary>
 		/// <param name="request">The user information to create</param>
 		/// <returns>The result of the operation</returns>
@@ -71,7 +111,37 @@ namespace KLab.Infrastructure.Core.Services
 				return Result.Failure(creationResult.Errors.ToDomainErrors());
 			}
 
-			return Result.Success();
+			var roleExists = await _roleManager.RoleExistsAsync(nameof(Roles.User));
+
+			if (!roleExists)
+			{
+				await _roleManager.CreateAsync(new IdentityRole(nameof(Roles.User)));
+			}
+
+			var assignRoleResult = await _userManager.AddToRoleAsync(request, nameof(Roles.User));
+
+            if (!assignRoleResult.Succeeded)
+            {
+				await _userManager.DeleteAsync(request);
+
+				return Result.Failure(assignRoleResult.Errors.ToDomainErrors());
+            }
+
+            return Result.Success();
+		}
+
+		/// <summary>
+		/// Deletes the specified user from the application
+		/// </summary>
+		/// <param name="user">The user to be deleted</param>
+		/// <returns>The result of deleting user</returns>
+		public async Task<Result> DeleteUserAsync(ApplicationUser user)
+		{
+			var deleteResult = await _userManager.DeleteAsync(user);
+
+			return deleteResult.Succeeded
+				? Result.Success()
+				: Result.Failure(deleteResult.Errors.ToDomainErrors());
 		}
 
 		/// <summary>
@@ -122,13 +192,13 @@ namespace KLab.Infrastructure.Core.Services
 		/// <summary>
 		/// Retrieves a user asynchronously based on the specified username
 		/// </summary>
-		/// <param name="userId">The username</param>
+		/// <param name="id">The username</param>
 		/// <returns>The result containing the user information</returns>
-		public async Task<Result<GetUserQueryResponse>> GetUserAsync(string userId)
+		public async Task<Result<GetUserQueryResponse>> GetUserAsync(string id)
 		{
 			var user = await _userManager.Users
 				.AsNoTracking()
-				.Where(user => user.Id == userId)
+				.Where(user => user.Id == id)
 				.Select(user => new GetUserQueryResponse
 				(
 					user.Id,
@@ -167,11 +237,11 @@ namespace KLab.Infrastructure.Core.Services
 		/// <summary>
 		/// Checks asynchronously if a user exists
 		/// </summary>
-		/// <param name="userId">The user id</param>
+		/// <param name="id">The user id</param>
 		/// <returns>A boolean indicating whether the user exists</returns>
-		public async Task<bool> IsUserExistsAsync(string userId)
+		public async Task<bool> IsUserExistsAsync(string id)
 		{
-			return await _userManager.Users.AnyAsync(user => user.Id == userId);
+			return await _userManager.Users.AnyAsync(user => user.Id == id);
 		}
 
 		/// <summary>

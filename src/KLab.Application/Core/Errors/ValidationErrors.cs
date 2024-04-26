@@ -8,7 +8,7 @@ namespace KLab.Application.Core.Errors
 	internal static class ValidationErrors
 	{
 		/// <summary>
-		/// Represents a class for user-related errors.
+		/// Represents a class for user-related errors
 		/// </summary>
 		internal static class User
 		{
@@ -39,7 +39,7 @@ namespace KLab.Application.Core.Errors
 		}
 
 		/// <summary>
-		/// Represents a class for authentication-related errors.
+		/// Represents a class for authentication-related errors
 		/// </summary>
 		internal static class Authentication
 		{
@@ -58,6 +58,20 @@ namespace KLab.Application.Core.Errors
 			internal static Error AuthenticationCodeIsRequired => Error.Validition(
 				"Authentication.AuthenticationCodeIsRequired",
 				"The authentication code is required.");
+		}
+
+		/// <summary>
+		/// Represents a class for dashboard-related errors
+		/// </summary>
+		internal static class Dashboard
+		{
+			internal static Error RoleIsRequired => Error.Validition(
+				"Dashboard.RoleIsRequired",
+				"The role is required.");
+
+			internal static Error IncorrectRole => Error.Validition(
+				"Dashboard.IncorrectRole",
+				"The entered role is incorrect.");
 		}
 	}
 }

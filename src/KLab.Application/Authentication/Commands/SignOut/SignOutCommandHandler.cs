@@ -5,7 +5,7 @@ using KLab.Domain.Core.Primitives.ResultModel;
 namespace KLab.Application.Authentication.Commands.SignOut
 {
 	/// <summary>
-	/// Represents a handler for sign out
+	/// Represents a command handler to sign out
 	/// </summary>
 	public class SignOutCommandHandler : ICommandHandler<SignOutCommand, Result>
 	{
@@ -17,11 +17,11 @@ namespace KLab.Application.Authentication.Commands.SignOut
 		}
 
 		/// <summary>
-		///	Ending a user session and sign out of the application
+		///	Signs out the currently authenticated user
 		/// </summary>
-		/// <param name="request">SignOutCommand</param>
+		/// <param name="request">The command to sign out the currently authenticated user</param>
 		/// <param name="cancellationToken">The cancellation token</param>
-		/// <returns>The result of sign our</returns>
+		/// <returns>The result of the operation</returns>
 		public async Task<Result> Handle(SignOutCommand request, CancellationToken cancellationToken)
 		{
 			var result = await _identityService.SignOutAsync();

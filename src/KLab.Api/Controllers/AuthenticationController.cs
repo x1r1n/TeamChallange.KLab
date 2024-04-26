@@ -7,7 +7,6 @@ using KLab.Application.Authentication.Commands.SignIn;
 using KLab.Application.Authentication.Commands.SignOut;
 using KLab.Application.User.Commands.CreateUser;
 using KLab.Contracts.Authentication;
-using KLab.Domain.Core.Primitives.ErrorModel;
 using KLab.Domain.Core.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +25,7 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// User registration in the application 
+		/// Registers a new user with the provided sign up information
 		/// </summary>
 		/// <remarks>
 		/// Note that the username and email must be unique
@@ -39,15 +38,15 @@ namespace KLab.Api.Controllers
 		///			"email": "sofia63@example.com"
 		///		}
 		/// </remarks>
-		/// <param name="request">The scheme of SignUpRequest that represents username and email</param>
+		/// <param name="request">The sign up request containing user details</param>
 		/// <returns>A message informing that the verification code has been sent to the email</returns>
+		/// <response code="200">If verification code to complete registration is sent </response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="409">If a username or email already exists</response>
+		/// <response code="422">If the sign up process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPost(ApiRoutes.Authentication.SignUp)]
 		[AllowAnonymous]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status409Conflict)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
 		public async Task<IActionResult> SignUp(SignUpRequest request)
 		{
 			var result = await _mediator.Send(new CreateUserCommand(request.Username, request.Email));
@@ -58,7 +57,7 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// User authentication in the application
+		/// Authenticates a user using email
 		/// </summary>
 		/// <remarks>
 		/// Sample request:
@@ -68,14 +67,14 @@ namespace KLab.Api.Controllers
 		///			"email": "sofia63@example.com"
 		///		}
 		/// </remarks>
-		/// <param name="request">The scheme of SignInRequest that represents email</param>
-		/// <returns>A message informing that the authentication code has been sent to the email</returns>
+		/// <param name="request">The sign in request containing user email</param>
+		/// <response code="200">If the authentication code to complete authentication is sent</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="404">If the requested resource is not found</response>
+		/// <response code="422">If the sign in process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPost(ApiRoutes.Authentication.SignIn)]
 		[AllowAnonymous]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
 		public async Task<IActionResult> SignIn(SignInRequest request)
 		{
 			var result = await _mediator.Send(new SignInCommand(request.Email));
@@ -86,13 +85,12 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Ending a user session and sign out of the application
+		/// Signs out the currently authenticated user
 		/// </summary>
+		/// <response code="204">If the user is successfully signed out</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPost(ApiRoutes.Authentication.SignOut)]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status401Unauthorized)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> UserSignOut()
 		{
 			var result = await _mediator.Send(new SignOutCommand());
@@ -103,7 +101,7 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Confirmation of an email with the specified confirmation code for new user registration
+		/// Verifies the email address using the provided verification code
 		/// </summary>
 		/// <remarks>
 		/// Sample request:
@@ -114,13 +112,14 @@ namespace KLab.Api.Controllers
 		///			"verificationCode": "4813"
 		///		}
 		/// </remarks>
-		/// <param name="request">The scheme of VerifyEmailRequest that represents email and verification code</param>
+		/// <param name="request">The request containing email address and verification code</param>
+		/// <response code="204">If the email address is successfully verified</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="422">If the verification process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPost(ApiRoutes.Authentication.VerifyEmail)]
 		[AllowAnonymous]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
 		public async Task<IActionResult> VerifyEmail(VerifyEmailRequest request)
 		{
 			var result = await _mediator.Send(new VerifyEmailCommand(request.Email, request.VerificationCode));
@@ -131,7 +130,7 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Authenticate a user using the authentication code sent via email
+		/// Authenticates a user with the provided email and authentication code
 		/// </summary>
 		/// <remarks>
 		/// Sample request:
@@ -142,13 +141,14 @@ namespace KLab.Api.Controllers
 		///			"authenticationCode": "4813"
 		///		}
 		/// </remarks>
-		/// <param name="request">The scheme of AuthenticateRequest that represents email and authentication code</param>
+		/// <param name="request">The request containing email address and authentication code</param>
+		/// <response code="204">If the user is successfully authenticated</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="422">If the authentication process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPost(ApiRoutes.Authentication.Authenticate)]
 		[AllowAnonymous]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
 		public async Task<IActionResult> Authenticate(AuthenticateRequest request)
 		{
 			var result = await _mediator.Send(new AuthenticateCommand(request.Email, request.AuthenticationCode));
@@ -159,7 +159,7 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Resend verification code  
+		/// Resends the verification code to the specified email address
 		/// </summary>
 		/// <remarks>
 		/// Sample request:
@@ -169,14 +169,14 @@ namespace KLab.Api.Controllers
 		///			"email": "sofia63@example.com"
 		///		}
 		/// </remarks>
-		/// <param name="request">The scheme of ResendVerificationCodeRequest that represents email</param>
-		/// <returns>A message informing that the verification code has been sent to the email</returns>
+		/// <param name="request">The request containing the email address</param>
+		/// <response code="200">If the verification code is successfully resent</response>
+		/// <response code="400">If the request is invalid or malformed</response>
+		/// <response code="404">If the user is not found</response>
+		/// <response code="422">If the resend verification code process encounters validation errors</response>
+		/// <response code="500">If an unexpected error occurs during processing</response>
 		[HttpPost(ApiRoutes.Authentication.ResendVerificationCode)]
 		[AllowAnonymous]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status404NotFound)]
-		[ProducesResponseType(typeof(IEnumerable<Error>), StatusCodes.Status422UnprocessableEntity)]
 		public async Task<IActionResult> ResendVerificationCode(ResendVerificationCodeRequest request)
 		{
 			var result = await _mediator.Send(new ResendVerificationCodeCommand(request.Email!));

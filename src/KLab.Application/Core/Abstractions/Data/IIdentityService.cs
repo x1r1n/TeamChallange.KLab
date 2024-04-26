@@ -1,15 +1,16 @@
 ﻿using KLab.Application.User.Commands.UpdateUser;
 using KLab.Application.User.Queries.GetUser;
+using KLab.Domain.Core.Enums;
 using KLab.Domain.Core.Primitives;
 using KLab.Domain.Core.Primitives.ResultModel;
 using KLab.Domain.Entities;
 
 namespace KLab.Application.Core.Abstractions.Data
 {
-	/// <summary>
-	/// Represents the interface for the identity service
-	/// </summary>
-	public interface IIdentityService
+    /// <summary>
+    /// Represents the interface for the identity service
+    /// </summary>
+    public interface IIdentityService
 	{
 		/// <summary>
 		/// Finds a user asynchronously based on the specified criteria
@@ -74,9 +75,9 @@ namespace KLab.Application.Core.Abstractions.Data
 		/// <summary>
 		/// Checks asynchronously if a user exists
 		/// </summary>
-		/// <param name="userId">The user id</param>
+		/// <param name="id">The user id</param>
 		/// <returns>A boolean indicating whether the user exists</returns>
-		Task<bool> IsUserExistsAsync(string userId);
+		Task<bool> IsUserExistsAsync(string id);
 
 		/// <summary>
 		/// Checks asynchronously if an email is unique
@@ -90,5 +91,20 @@ namespace KLab.Application.Core.Abstractions.Data
 		/// </summary>
 		/// <returns>The result of the sign out operation</returns>
 		Task<Result> SignOutAsync();
+
+		/// <summary>
+		/// Assigns a role to a user by specified identifier
+		/// </summary>
+		/// <param name="user">The user to whom the role is assigned</param>
+		/// <param name="role">The role to assign</param>
+		/// <returns>The result of assigning role</returns>
+		Task<Result> AssignRoleAsync(ApplicationUser user, Roles role);
+
+		/// <summary>
+		/// Deletes the specified user from the application
+		/// </summary>
+		/// <param name="user">The user to be deleted</param>
+		/// <returns>The result of deleting user</returns>
+		Task<Result> DeleteUserAsync(ApplicationUser user);
 	}
 }
