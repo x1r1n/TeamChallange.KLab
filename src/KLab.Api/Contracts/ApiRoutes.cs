@@ -37,5 +37,14 @@
 			public const string UserManagement = "dashboard/user/{id}";
 			public const string UserRoleManagement = "dashboard/user/{id}/role";
 		}
+
+		/// <summary>
+		/// Represents the api routes for dashboard controller
+		/// </summary>
+		public static class Dashboard
+		{
+			public const string UserManagement = "dashboard/user/{id}";
+			public const string UserRoleManagement = "dashboard/user/{id}/role";
+		}
 	}
 }
