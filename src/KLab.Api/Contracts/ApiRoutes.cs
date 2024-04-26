@@ -24,8 +24,9 @@
 		public static class Users
 		{
 			public const string Me = "users/me";
+			public const string MeImage = "users/me/image";
 			public const string User = "users/{id}";
-			public const string Image = "users/{id}/image";
+			public const string UserImage = "users/{id}/image";
 		}
 
 		/// <summary>
