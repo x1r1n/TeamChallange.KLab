@@ -74,27 +74,8 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Updates information about a user by their id
+		/// Updates information about the currently authenticated user
 		/// </summary>
-		/// <remarks>
-		/// Sample requests:
-		/// 
-		///     PATCH api/users/{id}
-		///     {
-		///         "nickname": "Alice",
-		///         "description": "I like foreign and domestic literature"
-		///     }
-		///     
-		///     PATCH api/users/{id}
-		///     {
-		///         "description": "I hope to find like-minded people with whom I can discuss ukrainian literature"
-		///     }
-		///     
-		///		PATCH api/users/{id}
-		///     {
-		///         "nickname": "Franko"
-		///     }
-		/// </remarks>
 		/// <param name="request">The request containing updated user information</param>
 		/// <response code="204">If the user information is successfully updated</response>
 		/// <response code="400">If the request is invalid or malformed</response>
@@ -102,7 +83,7 @@ namespace KLab.Api.Controllers
 		/// <response code="404">If the user is not found</response>
 		/// <response code="422">If the update process encounters validation errors</response>
 		/// <response code="500">If an unexpected error occurs during processing</response>
-		[HttpPatch(ApiRoutes.Users.User)]
+		[HttpPatch(ApiRoutes.Users.Me)]
 		public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -135,7 +116,7 @@ namespace KLab.Api.Controllers
 		/// <response code="404">If the user or image is not found</response>
 		/// <response code="422">If the image retrieval process encounters validation errors</response>
 		/// <response code="500">If an unexpected error occurs during processing</response>
-		[HttpGet(ApiRoutes.Users.Image)]
+		[HttpGet(ApiRoutes.Users.UserImage)]
 		public async Task<IActionResult> GetUserImage(string id)
 		{
 			var result = await _mediator.Send(new GetUserImageQuery(id));
@@ -146,7 +127,7 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Uploads an image for a user by their id
+		/// Uploads an image for the currently authenticated user
 		/// </summary>
 		/// <param name="request">The request containing the image data</param>
 		/// <response code="204">If the user image is successfully uploaded</response>
@@ -156,7 +137,7 @@ namespace KLab.Api.Controllers
 		/// <response code="409">If the user already has an image uploaded</response>
 		/// <response code="422">If the image upload process encounters validation errors</response>
 		/// <response code="500">If an unexpected error occurs during processing</response>
-		[HttpPost(ApiRoutes.Users.Image)]
+		[HttpPost(ApiRoutes.Users.MeImage)]
 		public async Task<IActionResult> UploadUserImage(UploadUserImageRequest request)
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -176,7 +157,7 @@ namespace KLab.Api.Controllers
 		}
 
 		/// <summary>
-		/// Updates the image for a user by their id 
+		/// Updates the image for the currently authenticated user
 		/// </summary>
 		/// <param name="request">The request containing the updated image data</param>
 		/// <response code="204">If the user image is successfully updated</response>
@@ -185,7 +166,7 @@ namespace KLab.Api.Controllers
 		/// <response code="404">If the user is not found</response>
 		/// <response code="422">If the image upload process encounters validation errors</response>
 		/// <response code="500">If an unexpected error occurs during processing</response>
-		[HttpPut(ApiRoutes.Users.Image)]
+		[HttpPut(ApiRoutes.Users.MeImage)]
 		public async Task<IActionResult> UpdateUserImage(UpdateUserImageRequest request)
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -213,7 +194,7 @@ namespace KLab.Api.Controllers
 		/// <response code="404">If the user or image is not found</response>
 		/// <response code="422">If the image deletion process encounters validation errors</response>
 		/// <response code="500">If an unexpected error occurs during processing</response>
-		[HttpDelete(ApiRoutes.Users.Image)]
+		[HttpDelete(ApiRoutes.Users.MeImage)]
 		public async Task<IActionResult> DeleteUserImage()
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

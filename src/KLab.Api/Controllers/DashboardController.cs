@@ -32,7 +32,7 @@ namespace KLab.Api.Controllers
 		/// <response code="404">If the user with the specified id is not found</response>
 		/// <response code="422">If the role assignment process encounters validation errors</response>
 		/// <response code="500">If an unexpected error occurs during processing</response>
-		[HttpPatch(ApiRoutes.Dashboard.UserRoleManagement)]
+		[HttpPut(ApiRoutes.Dashboard.UserRoleManagement)]
         [Authorize(Roles = nameof(Roles.Administrator))]
 		public async Task<IActionResult> AssignRole(string id, [FromBody] AssignRoleRequest request)
         {
