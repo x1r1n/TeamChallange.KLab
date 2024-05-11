@@ -7,7 +7,6 @@ using KLab.Application.User.Commands.UploadUserImage;
 using KLab.Application.User.Queries.GetUser;
 using KLab.Application.User.Queries.GetUserImage;
 using KLab.Contracts.User;
-using KLab.Domain.Core.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -40,12 +39,7 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
-			var result = await _mediator.Send(new GetUserQuery(id));
+			var result = await _mediator.Send(new GetUserQuery(id!));
 
 			return result.IsSuccess
 				? Ok(result.Value)
@@ -88,13 +82,8 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
 			var result = await _mediator.Send(new UpdateUserCommand(
-				id,
+				id!,
 				request.Nickname!,
 				request.Description!));
 
@@ -142,13 +131,8 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
 			var result = await _mediator.Send(new UploadUserImageCommand(
-				id,
+				id!,
 				request.Image!));
 
 			return result.IsSuccess
@@ -171,13 +155,8 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
 			var result = await _mediator.Send(new UpdateUserImageCommand(
-				id,
+				id!,
 				request.Image!));
 
 			return result.IsSuccess
@@ -199,12 +178,7 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
-			var result = await _mediator.Send(new DeleteUserImageCommand(id));
+			var result = await _mediator.Send(new DeleteUserImageCommand(id!));
 
 			return result.IsSuccess
 				? NoContent()
