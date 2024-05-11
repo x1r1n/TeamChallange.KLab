@@ -21,11 +21,11 @@ namespace KLab.Application.Core.Abstractions.Data
 		Task<Result<ApplicationUser>> FindUserAsync(string request, FindType type);
 
 		/// <summary>
-		/// Retrieves a user asynchronously based on the specified username
+		/// Retrieves a user asynchronously based on the specified user identifier
 		/// </summary>
-		/// <param name="username">The username</param>
+		/// <param name="id">The user identifier</param>
 		/// <returns>The result containing the user information</returns>
-		Task<Result<GetUserQueryResponse>> GetUserAsync(string username);
+		Task<Result<GetUserQueryResponse>> GetUserAsync(string id);
 
 		/// <summary>
 		/// Creates a new user asynchronously
