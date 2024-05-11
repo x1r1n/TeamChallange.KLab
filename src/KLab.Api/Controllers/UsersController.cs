@@ -27,7 +27,7 @@ namespace KLab.Api.Controllers
 		/// Retrieves information about the currently authenticated user
 		/// </summary>
 		/// <remarks>
-		/// Returns the user id, username, nickname, email, and registration date with time in UTC
+		/// Returns the user id, username, nickname, email, description, role and registration date with time in UTC
 		/// </remarks>
 		/// <response code="200">If the user information is successfully retrieved</response>
 		/// <response code="400">If the request is invalid or malformed</response>
@@ -50,7 +50,7 @@ namespace KLab.Api.Controllers
 		/// Retrieves information about a user by their id
 		/// </summary>
 		/// <remarks>
-		/// Returns the user id, username, nickname, email, and registration date with time in UTC
+		/// Returns the user id, username, nickname, email, description, role and registration date with time in UTC
 		/// </remarks>
 		/// <param name="id">The id of the user to retrieve information for.</param>
 		/// <response code="200">If the user information is successfully retrieved</response>
