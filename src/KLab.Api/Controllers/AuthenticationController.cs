@@ -28,16 +28,6 @@ namespace KLab.Api.Controllers
 		/// Registers a new user with the provided sign up information
 		/// </summary>
 		/// <remarks>
-		/// Note that the username and email must be unique
-		/// 
-		/// Sample request:
-		/// 
-		///		POST api/authentication/sign-up
-		///		{
-		///			"username": "Sofia",
-		///			"email": "sofia63@example.com"
-		///		}
-		/// </remarks>
 		/// <param name="request">The sign up request containing user details</param>
 		/// <returns>A message informing that the verification code has been sent to the email</returns>
 		/// <response code="200">If verification code to complete registration is sent </response>
@@ -59,14 +49,6 @@ namespace KLab.Api.Controllers
 		/// <summary>
 		/// Authenticates a user using email
 		/// </summary>
-		/// <remarks>
-		/// Sample request:
-		/// 
-		///		POST api/authentication/sign-in
-		///		{
-		///			"email": "sofia63@example.com"
-		///		}
-		/// </remarks>
 		/// <param name="request">The sign in request containing user email</param>
 		/// <response code="200">If the authentication code to complete authentication is sent</response>
 		/// <response code="400">If the request is invalid or malformed</response>
@@ -103,15 +85,6 @@ namespace KLab.Api.Controllers
 		/// <summary>
 		/// Verifies the email address using the provided verification code
 		/// </summary>
-		/// <remarks>
-		/// Sample request:
-		/// 
-		///		POST api/authentication/verify-email
-		///		{
-		///			"email": "sofia63@example.com",
-		///			"verificationCode": "4813"
-		///		}
-		/// </remarks>
 		/// <param name="request">The request containing email address and verification code</param>
 		/// <response code="204">If the email address is successfully verified</response>
 		/// <response code="400">If the request is invalid or malformed</response>
@@ -132,15 +105,6 @@ namespace KLab.Api.Controllers
 		/// <summary>
 		/// Authenticates a user with the provided email and authentication code
 		/// </summary>
-		/// <remarks>
-		/// Sample request:
-		/// 
-		///		POST api/authentication/authenticate-email
-		///		{
-		///			"email": "sofia63@example.com",
-		///			"authenticationCode": "4813"
-		///		}
-		/// </remarks>
 		/// <param name="request">The request containing email address and authentication code</param>
 		/// <response code="204">If the user is successfully authenticated</response>
 		/// <response code="400">If the request is invalid or malformed</response>
@@ -161,14 +125,6 @@ namespace KLab.Api.Controllers
 		/// <summary>
 		/// Resends the verification code to the specified email address
 		/// </summary>
-		/// <remarks>
-		/// Sample request:
-		/// 
-		///		POST api/authentication/resend-verification-code
-		///		{
-		///			"email": "sofia63@example.com"
-		///		}
-		/// </remarks>
 		/// <param name="request">The request containing the email address</param>
 		/// <response code="200">If the verification code is successfully resent</response>
 		/// <response code="400">If the request is invalid or malformed</response>

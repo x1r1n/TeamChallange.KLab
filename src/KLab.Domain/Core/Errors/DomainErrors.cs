@@ -24,7 +24,7 @@ namespace KLab.Domain.Core.Errors
 		{
 			public static Error NotFound => Error.NotFound(
 				"User.NotFound",
-				"The user with this email address is not yet registered.");
+				"The user with this identifier is not yet registered.");
 
 			public static Error AlreadyRegistered => Error.Conflict(
 				"User.AlreadyRegistered",
@@ -40,10 +40,6 @@ namespace KLab.Domain.Core.Errors
 		/// </summary>
 		public static class Authentication
 		{
-			public static Error UserNotFound => Error.NotFound(
-				"Authentication.UserNotFound",
-				"The user with this email address is not yet registered.");
-
 			public static Error EmailAlreadyVerified => Error.Conflict(
 				"Authentication.EmailAlreadyVerified",
 				"The email has already been verified.");

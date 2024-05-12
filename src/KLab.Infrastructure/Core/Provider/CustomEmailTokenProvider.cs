@@ -1,9 +1,9 @@
 ﻿using KLab.Domain.Entities;
-using KLab.Infrastructure.Core.Extensions;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Globalization;
 
 namespace KLab.Infrastructure.Core.Provider
 {
@@ -19,7 +19,7 @@ namespace KLab.Infrastructure.Core.Provider
 			: base(dataProtectionProvider, options, logger) { }
 
 		/// <summary>
-		/// Generates a token for the specified purpose and user
+		/// Generates a token for the specified purpose and user using Rfc6238TokenService
 		/// </summary>
 		/// <param name="purpose">The purpose of the token</param>
 		/// <param name="manager">The user manager</param>
@@ -30,25 +30,12 @@ namespace KLab.Infrastructure.Core.Provider
 			UserManager<ApplicationUser> manager, 
 			ApplicationUser user)
 		{
-			ArgumentNullException.ThrowIfNull(user);
-			var ms = new MemoryStream();
-			var userId = await manager.GetUserIdAsync(user);
-			using (var writer = ms.CreateWriter())
-			{
-				writer.Write(DateTimeOffset.UtcNow);
-				writer.Write(userId);
-				writer.Write(purpose ?? "");
-				string? stamp = null;
-				if (manager.SupportsUserSecurityStamp)
-				{
-					stamp = await manager.GetSecurityStampAsync(user);
-				}
-				writer.Write(stamp ?? "");
-			}
-			var protectedString = Protector.Protect(ms.ToArray()).ToString();
-			var hash = protectedString!.GetHashCode();
-			var fourDigitNumber = (Math.Abs(hash % 9000) + 1000).ToString();
-			return fourDigitNumber;
+			var token = await manager.CreateSecurityTokenAsync(user);
+			var code = Rfc6238TokenService
+				.GenerateCode(token, 4)
+				.ToString("D4", CultureInfo.InvariantCulture);
+
+			return code;
 		}
 
 		/// <summary>
@@ -64,25 +51,15 @@ namespace KLab.Infrastructure.Core.Provider
 			UserManager<ApplicationUser> manager, 
 			ApplicationUser user)
 		{
-			ArgumentNullException.ThrowIfNull(user);
-			var ms = new MemoryStream();
-			var userId = await manager.GetUserIdAsync(user);
-			using (var writer = ms.CreateWriter())
+			if (!Int32.TryParse(token, out int code))
 			{
-				writer.Write(DateTimeOffset.UtcNow);
-				writer.Write(userId);
-				writer.Write(purpose ?? "");
-				string? stamp = null;
-				if (manager.SupportsUserSecurityStamp)
-				{
-					stamp = await manager.GetSecurityStampAsync(user);
-				}
-				writer.Write(stamp ?? "");
+				return false;
 			}
-			var protectedString = Protector.Protect(ms.ToArray()).ToString();
-			var hash = protectedString!.GetHashCode();
-			var fourDigitNumber = (Math.Abs(hash % 9000) + 1000).ToString();
-			return token.Equals(fourDigitNumber);
+
+			var securityToken = await manager.CreateSecurityTokenAsync(user);
+			var valid = Rfc6238TokenService.ValidateCode(securityToken, code, token.Length);
+
+			return valid;
 		}
 	}
 }

@@ -120,14 +120,14 @@ namespace KLab.Infrastructure.Core.Services
 
 			var assignRoleResult = await _userManager.AddToRoleAsync(request, nameof(Roles.User));
 
-            if (!assignRoleResult.Succeeded)
-            {
+			if (!assignRoleResult.Succeeded)
+			{
 				await _userManager.DeleteAsync(request);
 
 				return Result.Failure(assignRoleResult.Errors.ToDomainErrors());
-            }
+			}
 
-            return Result.Success();
+			return Result.Success();
 		}
 
 		/// <summary>
@@ -190,23 +190,32 @@ namespace KLab.Infrastructure.Core.Services
 		}
 
 		/// <summary>
-		/// Retrieves a user asynchronously based on the specified username
+		/// Retrieves a user asynchronously based on the specified user identifier
 		/// </summary>
-		/// <param name="id">The username</param>
+		/// <param name="id">The user identifier</param>
 		/// <returns>The result containing the user information</returns>
 		public async Task<Result<GetUserQueryResponse>> GetUserAsync(string id)
 		{
-			var user = await _userManager.Users
+			var user = await _context.Users
 				.AsNoTracking()
 				.Where(user => user.Id == id)
-				.Select(user => new GetUserQueryResponse
-				(
-					user.Id,
-					user.UserName!,
-					user.Nickname!,
-					user.Email!,
-					user.CreatedAtUtc
-				))
+				.Join(
+				_context.UserRoles.AsNoTracking(),
+				user => user.Id,
+				userRole => userRole.UserId,
+				(user, userRole) => new { User = user, UserRole = userRole })
+				.Join(
+				_context.Roles.AsNoTracking(),
+				userRole => userRole.UserRole.RoleId,
+				role => role.Id,
+				(userRole, role) => new GetUserQueryResponse(
+					userRole.User.Id!,
+					userRole.User.UserName!,
+					userRole.User.Nickname!,
+					userRole.User.Email!,
+					userRole.User.Description!,
+					role.Name!,
+					userRole.User.CreatedAtUtc))
 				.FirstOrDefaultAsync();
 
 			if (user == default)

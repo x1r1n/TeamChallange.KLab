@@ -7,7 +7,6 @@ using KLab.Application.User.Commands.UploadUserImage;
 using KLab.Application.User.Queries.GetUser;
 using KLab.Application.User.Queries.GetUserImage;
 using KLab.Contracts.User;
-using KLab.Domain.Core.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -28,7 +27,7 @@ namespace KLab.Api.Controllers
 		/// Retrieves information about the currently authenticated user
 		/// </summary>
 		/// <remarks>
-		/// Returns the user id, username, nickname, email, and registration date with time in UTC
+		/// Returns the user id, username, nickname, email, description, role and registration date with time in UTC
 		/// </remarks>
 		/// <response code="200">If the user information is successfully retrieved</response>
 		/// <response code="400">If the request is invalid or malformed</response>
@@ -40,12 +39,7 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
-			var result = await _mediator.Send(new GetUserQuery(id));
+			var result = await _mediator.Send(new GetUserQuery(id!));
 
 			return result.IsSuccess
 				? Ok(result.Value)
@@ -56,7 +50,7 @@ namespace KLab.Api.Controllers
 		/// Retrieves information about a user by their id
 		/// </summary>
 		/// <remarks>
-		/// Returns the user id, username, nickname, email, and registration date with time in UTC
+		/// Returns the user id, username, nickname, email, description, role and registration date with time in UTC
 		/// </remarks>
 		/// <param name="id">The id of the user to retrieve information for.</param>
 		/// <response code="200">If the user information is successfully retrieved</response>
@@ -88,13 +82,8 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
 			var result = await _mediator.Send(new UpdateUserCommand(
-				id,
+				id!,
 				request.Nickname!,
 				request.Description!));
 
@@ -142,13 +131,8 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
 			var result = await _mediator.Send(new UploadUserImageCommand(
-				id,
+				id!,
 				request.Image!));
 
 			return result.IsSuccess
@@ -171,13 +155,8 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
 			var result = await _mediator.Send(new UpdateUserImageCommand(
-				id,
+				id!,
 				request.Image!));
 
 			return result.IsSuccess
@@ -199,12 +178,7 @@ namespace KLab.Api.Controllers
 		{
 			var id = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			if (id is null)
-			{
-				return Unauthorized(DomainErrors.Authentication.Unauthorized);
-			}
-
-			var result = await _mediator.Send(new DeleteUserImageCommand(id));
+			var result = await _mediator.Send(new DeleteUserImageCommand(id!));
 
 			return result.IsSuccess
 				? NoContent()

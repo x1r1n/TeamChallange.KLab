@@ -19,6 +19,12 @@ builder.Services
 	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
 
+builder.Services.ConfigureApplicationCookie(
+	options =>
+	{
+		options.Cookie.SameSite = SameSiteMode.None;
+	});
+
 builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation();
@@ -37,8 +43,6 @@ builder.Services.AddSwaggerGen(options => options.ConfigureSwaggerGen());
 
 var app = builder.Build();
 
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
 app.UseExceptionHandler();
 
 app.UseSwagger();
@@ -51,6 +55,8 @@ app.UseSwaggerUI(
 	});
 
 app.UseHttpsRedirection();
+
+app.UseCors(options => options.ConfigureCorsPolicy(builder.Configuration));
 
 app.UseMiddleware<ApiKeyMiddleware>();
 
